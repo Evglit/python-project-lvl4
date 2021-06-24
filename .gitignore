@@ -7,3 +7,8 @@ __pycache__/
 coverage.xml
 .pytest_cache/
 .vscode
+venv
+staticfiles
+.env
+db.sqlite3
+getting-started/*
