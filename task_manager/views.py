@@ -1,25 +1,39 @@
 from django.shortcuts import render
+from django.views.generic.base import TemplateView
+from django.utils.translation import gettext
 
 
-def index(request):
-    return render(request, 'index.html', context={
-        'title': '',
-    })
+class HomePage(TemplateView):
+
+    template_name = 'index.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = gettext('')
 
 
-def users(request):
-    return render(request, 'users.html', context={
-        'title': 'Пользователи',
-    })
+class UserPage(TemplateView):
+
+    template_name = 'users.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = gettext('Пользователи')
 
 
-def login(request):
-    return render(request, 'login.html', context={
-        'title': 'Вход',
-    })
+class LoginPage(TemplateView):
+
+    template_name = 'login.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = gettext('Вход')
 
 
-def create(request):
-    return render(request, 'create.html', context={
-        'title': 'Регистрация',
-    })
+class CreatePage(TemplateView):
+
+    template_name = 'create.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = gettext('Регистрация')
