@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block content %}
 <table class="table table-striped">
     <thead>
       <tr>
         <th>ID</th>
-        <th>Имя пользователя</th>
-        <th>Полное имя</th>
-        <th>Дата создания</th>
+        <th>{% translate "Имя пользователя" %}</th>
+        <th>{% translate "Полное имя" %}</th>
+        <th>{% translate "Дата создания" %}</th>
         <th></th>
       </tr>
     </thead>
@@ -20,9 +21,9 @@
           <td>{{ user.name }}</td>
           <td>{{ user.create }}</td>
           <td>
-            <a href="">Изменить</a>
+            <a href="">{% translate "Имя пользователя" %}Изменить</a>
             <br>
-            <a href="">Удалить</a>
+            <a href="">{% translate "Имя пользователя" %}Удалить</a>
           </td>
         </tr>
         {% endfor %}

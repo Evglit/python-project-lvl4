@@ -1,15 +1,15 @@
-from django.shortcuts import render
 from django.views.generic.base import TemplateView
 from django.utils.translation import gettext
 
 
 class HomePage(TemplateView):
 
-    template_name = 'index.html'
+    template_name = 'home.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = gettext('')
+        return context
 
 
 class UserPage(TemplateView):
@@ -19,6 +19,7 @@ class UserPage(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = gettext('Пользователи')
+        return context
 
 
 class LoginPage(TemplateView):
@@ -28,6 +29,7 @@ class LoginPage(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = gettext('Вход')
+        return context
 
 
 class CreatePage(TemplateView):
@@ -37,3 +39,4 @@ class CreatePage(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = gettext('Регистрация')
+        return context
