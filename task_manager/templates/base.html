@@ -7,22 +7,22 @@
 {% block bootstrap4_content %}
 <body class="d-flex flex-column min-vh-100"></body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
-    <a class="navbar-brand" href="/">{% translate "Менеджер задач" %}</a>
+    <a class="navbar-brand" href="{% url 'home' %}">{% translate "Менеджер задач" %}</a>
     <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarToggleExternalContent">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarToggleExternalContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a class="nav-link" href="/users/">{% translate "Пользователи" %}</a>
+          <a class="nav-link" href="{% url 'users' %}">{% translate "Пользователи" %}</a>
         </li>         
       </ul>
       <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link" href="/login/">{% translate "Вход" %}</a>
+            <a class="nav-link" href="{% url 'login' %}">{% translate "Вход" %}</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/users/create/">{% translate "Регистрация" %}</a>
+            <a class="nav-link" href="{% url 'create' %}">{% translate "Регистрация" %}</a>
           </li>
       </ul>
     </div>
