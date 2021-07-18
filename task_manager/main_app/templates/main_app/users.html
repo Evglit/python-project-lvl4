@@ -1,0 +1,33 @@
+{% extends './base.html' %}
+{% load i18n %}
+
+{% block content %}
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>{% translate "Имя пользователя" %}</th>
+        <th>{% translate "Полное имя" %}</th>
+        <th>{% translate "Дата создания" %}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+
+        {% for user in users %}
+          <tr>
+            <td>{{ user.pk }}</td>
+            <td>{{ user.id_username }}</td>
+            <td>{{ user.id_first_name }} {{ user.id_last_name }}</td>
+            <td>{{ user.create }}</td>
+            <td>
+              <a href="{% url 'update' user.pk %}">{% translate "Изменить" %}</a>
+              <br>
+              <a href="{% url 'delete' user.pk %}">{% translate "Удалить" %}</a>
+            </td>
+          </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+{% endblock %}
