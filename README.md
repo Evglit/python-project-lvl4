@@ -5,6 +5,4 @@
 <a href="https://codeclimate.com/github/Evglit/python-project-lvl4/test_coverage"><img src="https://api.codeclimate.com/v1/badges/d612ea874e9d73728643/test_coverage" /></a><br>
 
 ## Heroku
-``` bash
-https://task-manager07.herokuapp.com
-```
+[https://task-manager07.herokuapp.com](https://task-manager07.herokuapp.com)
