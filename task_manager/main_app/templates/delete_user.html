@@ -1,0 +1,11 @@
+{% extends './base.html' %}
+{% load i18n %}
+{% load bootstrap4 %}
+
+{% block content %}
+    <p>Вы уверены, что хотите удалить {{ object.first_name }} {{ object.last_name }}?</p>
+    <form method="post">
+        {% csrf_token %}
+        <input class="btn btn-danger" type="submit" value="{{ command }}">
+    </form>
+{% endblock %}
