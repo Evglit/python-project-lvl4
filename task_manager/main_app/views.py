@@ -1,12 +1,14 @@
-from django.contrib.auth.forms import AuthenticationForm
-from django.utils.translation import gettext
+from django.urls import reverse_lazy
+from django.views.generic import ListView
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from .forms import CreateUserForm
 from django.contrib.auth.models import User
-from django.urls import reverse_lazy
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
+
+from .forms import CreateUserForm
 
 
 class HomePage(TemplateView):
@@ -15,55 +17,58 @@ class HomePage(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = gettext('')
         return context
 
 
-class UsersPage(TemplateView):
+class UsersPage(ListView):
     """Class for creating a user list page."""
+    model = User
     template_name = 'users.html'
+    context_object_name = 'users'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = gettext('Пользователи')
-        context['users'] = User.objects.all()
+        context['title'] = 'Пользователи'
         return context
 
 
-class CreateUser(CreateView):
+class CreateUser(SuccessMessageMixin, CreateView):
     """User registration class."""
     form_class = CreateUserForm
     template_name = 'form.html'
     success_url = reverse_lazy('login')
+    success_message = "Пользователь успешно зарегистрирован"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = gettext('Регистрация')
-        context['command'] = gettext('Зарегистрировать')
+        context['title'] = 'Регистрация'
+        context['command'] = 'Зарегистрировать'
         return context
 
 
-class LoginUser(LoginView):
+class LoginUser(SuccessMessageMixin, LoginView):
     """User login class."""
     form_class = AuthenticationForm
     template_name = 'form.html'
+    success_message = "Вы залогинены"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = gettext('Вход')
-        context['command'] = gettext('Войти')
+        context['title'] = 'Вход'
+        context['command'] = 'Войти'
         return context
 
     def get_success_url(seld):
         return reverse_lazy('home')
 
 
-class LogoutUser(LogoutView):
+class LogoutUser(SuccessMessageMixin, LogoutView):
     """User Logout class."""
     next_page = 'home'
+    success_message = "Вы разлогинены"
 
 
-class UbdateUser(LoginRequiredMixin, UpdateView):
+class UbdateUser(UserPassesTestMixin, SuccessMessageMixin, UpdateView):
     """User update class."""
     model = User
     form_class = CreateUserForm
@@ -71,28 +76,34 @@ class UbdateUser(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('users')
 
     login_url = 'login'
-    permission_denied_message = gettext(
-        'Вы не авторизованы! Пожалуйста, выполните вход.')
+    success_message = "Пользователь успешно изменён"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = gettext('Изменение пользователя')
-        context['command'] = gettext('Изменить')
+        context['title'] = 'Изменение пользователя'
+        context['command'] = 'Изменить'
         return context
 
+    def test_func(self):
+        obj = self.get_object()
+        return obj.pk == self.request.user.pk
 
-class DeleteUser(LoginRequiredMixin, DeleteView):
+
+class DeleteUser(UserPassesTestMixin, SuccessMessageMixin, DeleteView):
     """User delete class."""
     model = User
     template_name = 'delete_user.html'
     success_url = reverse_lazy('users')
 
     login_url = 'login'
-    permission_denied_message = gettext(
-        'Вы не авторизованы! Пожалуйста, выполните вход.')
+    success_message = "Пользователь успешно удалён"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = gettext('Удаление пользователя')
-        context['command'] = gettext('Да, удалить')
+        context['title'] = 'Удаление пользователя'
+        context['command'] = 'Да, удалить'
         return context
+ 
+    def test_func(self):
+        obj = self.get_object()
+        return obj.pk == self.request.user.pk
