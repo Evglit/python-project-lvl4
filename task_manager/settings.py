@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'task_manager.main_app.apps.MainAppConfig',
+    'task_manager.statuses.apps.StatusesConfig',
     'bootstrap4',
 ]
 
