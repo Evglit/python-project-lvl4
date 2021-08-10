@@ -7,6 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.shortcuts import redirect
 
 from .forms import CreateUserForm
 
@@ -77,7 +78,7 @@ class UbdateUser(UserPassesTestMixin, SuccessMessageMixin, UpdateView):
 
     login_url = 'login'
     success_message = "Пользователь успешно изменён"
-
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Изменение пользователя'
@@ -92,7 +93,7 @@ class UbdateUser(UserPassesTestMixin, SuccessMessageMixin, UpdateView):
 class DeleteUser(UserPassesTestMixin, SuccessMessageMixin, DeleteView):
     """User delete class."""
     model = User
-    template_name = 'delete_user.html'
+    template_name = 'delete.html'
     success_url = reverse_lazy('users')
 
     login_url = 'login'
@@ -102,6 +103,8 @@ class DeleteUser(UserPassesTestMixin, SuccessMessageMixin, DeleteView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Удаление пользователя'
         context['command'] = 'Да, удалить'
+        obj = self.get_object()
+        context['object'] = f'{obj.first_name} {obj.last_name}'
         return context
  
     def test_func(self):

@@ -12,7 +12,7 @@ urlpatterns = [
     path(
         'users/create/',
         views.CreateUser.as_view(),
-        name='create'
+        name='create_user'
     ),
     path(
         'login/',
@@ -27,10 +27,10 @@ urlpatterns = [
     path(
         'users/<int:pk>/update/',
         views.UbdateUser.as_view(),
-        name='update'
+        name='update_user'
     ),
     path(
         'users/<int:pk>/delete/',
         views.DeleteUser.as_view(),
-        name='delete'),  
+        name='delete_user'),  
 ]
