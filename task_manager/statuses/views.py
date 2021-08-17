@@ -5,6 +5,8 @@ from .forms import CreateStatusForm
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
+from django.shortcuts import redirect
 
 
 class StatusesPage(LoginRequiredMixin, ListView):
@@ -12,12 +14,17 @@ class StatusesPage(LoginRequiredMixin, ListView):
     model = Statuses
     template_name = 'statuses.html'
     context_object_name = 'statuses'
-    login_url = 'login'
+    login_url = reverse_lazy('login')
+    error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Cтатусы'
         return context
+
+    def handle_no_permission(self):
+        messages.error(self.request, self.error_message)
+        return redirect(self.login_url)
 
 
 class CreateStatus(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -25,14 +32,19 @@ class CreateStatus(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     form_class = CreateStatusForm
     template_name = 'form.html'
     success_url = reverse_lazy('statuses')
-    login_url = 'login'
+    login_url = reverse_lazy('login')
     success_message = 'Статус успешно создан'
+    error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Создать статус'
         context['command'] = 'Создать'
         return context
+    
+    def handle_no_permission(self):
+        messages.error(self.request, self.error_message)
+        return redirect(self.login_url)
 
 
 class UpdateStatus(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -41,8 +53,9 @@ class UpdateStatus(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     form_class = CreateStatusForm
     template_name = 'form.html'
     success_url = reverse_lazy('statuses')
-    login_url = 'login'
+    login_url = reverse_lazy('login')
     success_massage = 'Статус успешно изменён'
+    error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -50,14 +63,19 @@ class UpdateStatus(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         context['command'] = 'Изменить'
         return context
 
+    def handle_no_permission(self):
+        messages.error(self.request, self.error_message)
+        return redirect(self.login_url)
+
 
 class DeleteStatus(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     "Status delete class"
     model = Statuses
     template_name = 'delete.html'
     success_url = reverse_lazy('statuses')
-    login_url = 'login'
-    success_message = "Статус успешно удалён"
+    login_url = reverse_lazy('login')
+    success_message = 'Статус успешно удалён'
+    error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -65,3 +83,11 @@ class DeleteStatus(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
         context['command'] = 'Да, удалить'
         context['object'] = self.get_object().name
         return context
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(DeleteStatus, self).delete(request, *args, **kwargs)
+    
+    def handle_no_permission(self):
+        messages.error(self.request, self.error_message)
+        return redirect(self.login_url)

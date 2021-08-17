@@ -5,10 +5,10 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect
-
+from django.contrib import messages
 from .forms import CreateUserForm
 
 
@@ -38,7 +38,7 @@ class CreateUser(SuccessMessageMixin, CreateView):
     form_class = CreateUserForm
     template_name = 'form.html'
     success_url = reverse_lazy('login')
-    success_message = "Пользователь успешно зарегистрирован"
+    success_message = 'Пользователь успешно зарегистрирован'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -51,7 +51,7 @@ class LoginUser(SuccessMessageMixin, LoginView):
     """User login class."""
     form_class = AuthenticationForm
     template_name = 'form.html'
-    success_message = "Вы залогинены"
+    success_message = 'Вы залогинены'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -65,8 +65,13 @@ class LoginUser(SuccessMessageMixin, LoginView):
 
 class LogoutUser(SuccessMessageMixin, LogoutView):
     """User Logout class."""
-    next_page = 'home'
-    success_message = "Вы разлогинены"
+    next_page = reverse_lazy('home')
+    success_message = 'Вы разлогинены'
+
+    def dispatch(self, request, *args, **kwargs):
+        response = super().dispatch(request, *args, **kwargs)
+        messages.add_message(request, messages.INFO, self.success_message)
+        return response
 
 
 class UbdateUser(UserPassesTestMixin, SuccessMessageMixin, UpdateView):
@@ -76,8 +81,9 @@ class UbdateUser(UserPassesTestMixin, SuccessMessageMixin, UpdateView):
     template_name = 'form.html'
     success_url = reverse_lazy('users')
 
-    login_url = 'login'
-    success_message = "Пользователь успешно изменён"
+    login_url = reverse_lazy('login')
+    success_message = 'Пользователь успешно изменён'
+    error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -87,7 +93,17 @@ class UbdateUser(UserPassesTestMixin, SuccessMessageMixin, UpdateView):
 
     def test_func(self):
         obj = self.get_object()
-        return obj.pk == self.request.user.pk
+        if not self.request.user.is_authenticated:
+            return False
+        elif obj.pk != self.request.user.pk:
+            self.error_message = 'У вас нет прав для изменения другого пользователя.'
+            self.login_url = self.success_url
+            return False
+        return True
+
+    def handle_no_permission(self):
+        messages.error(self.request, self.error_message)
+        return redirect(self.login_url)
 
 
 class DeleteUser(UserPassesTestMixin, SuccessMessageMixin, DeleteView):
@@ -96,8 +112,9 @@ class DeleteUser(UserPassesTestMixin, SuccessMessageMixin, DeleteView):
     template_name = 'delete.html'
     success_url = reverse_lazy('users')
 
-    login_url = 'login'
-    success_message = "Пользователь успешно удалён"
+    login_url = reverse_lazy('login')
+    success_message = 'Пользователь успешно удалён'
+    error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -106,7 +123,21 @@ class DeleteUser(UserPassesTestMixin, SuccessMessageMixin, DeleteView):
         obj = self.get_object()
         context['object'] = f'{obj.first_name} {obj.last_name}'
         return context
- 
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(DeleteUser, self).delete(request, *args, **kwargs)
+
     def test_func(self):
         obj = self.get_object()
-        return obj.pk == self.request.user.pk
+        if not self.request.user.is_authenticated:
+            return False
+        elif obj.pk != self.request.user.pk:
+            self.error_message = 'У вас нет прав для изменения другого пользователя.'
+            self.login_url = self.success_url
+            return False
+        return True
+
+    def handle_no_permission(self):
+        messages.error(self.request, self.error_message)
+        return redirect(self.login_url)
