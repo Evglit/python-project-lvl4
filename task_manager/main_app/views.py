@@ -12,6 +12,11 @@ from django.contrib import messages
 from .forms import CreateUserForm
 
 
+LOGIN_URL_NAME = 'login'
+HOME_URL_NAME = 'home'
+USERS_URL_NAME = 'users'
+
+
 class HomePage(TemplateView):
     """Class for creating a home page."""
     template_name = 'home.html'
@@ -21,7 +26,7 @@ class HomePage(TemplateView):
         return context
 
 
-class UsersPage(ListView):
+class UserListPage(ListView):
     """Class for creating a user list page."""
     model = User
     template_name = 'users.html'
@@ -37,7 +42,7 @@ class CreateUser(SuccessMessageMixin, CreateView):
     """User registration class."""
     form_class = CreateUserForm
     template_name = 'form.html'
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy(LOGIN_URL_NAME)
     success_message = 'Пользователь успешно зарегистрирован'
 
     def get_context_data(self, **kwargs):
@@ -60,12 +65,12 @@ class LoginUser(SuccessMessageMixin, LoginView):
         return context
 
     def get_success_url(seld):
-        return reverse_lazy('home')
+        return reverse_lazy(HOME_URL_NAME)
 
 
 class LogoutUser(SuccessMessageMixin, LogoutView):
     """User Logout class."""
-    next_page = reverse_lazy('home')
+    next_page = reverse_lazy(HOME_URL_NAME)
     success_message = 'Вы разлогинены'
 
     def dispatch(self, request, *args, **kwargs):
@@ -74,14 +79,14 @@ class LogoutUser(SuccessMessageMixin, LogoutView):
         return response
 
 
-class UbdateUser(UserPassesTestMixin, SuccessMessageMixin, UpdateView):
+class UbdateUser(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
     """User update class."""
     model = User
     form_class = CreateUserForm
     template_name = 'form.html'
-    success_url = reverse_lazy('users')
+    success_url = reverse_lazy(USERS_URL_NAME)
 
-    login_url = reverse_lazy('login')
+    login_url = reverse_lazy(LOGIN_URL_NAME)
     success_message = 'Пользователь успешно изменён'
     error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
     
@@ -93,11 +98,9 @@ class UbdateUser(UserPassesTestMixin, SuccessMessageMixin, UpdateView):
 
     def test_func(self):
         obj = self.get_object()
-        if not self.request.user.is_authenticated:
-            return False
-        elif obj.pk != self.request.user.pk:
+        if self.request.user.is_authenticated and obj.pk != self.request.user.pk:
             self.error_message = 'У вас нет прав для изменения другого пользователя.'
-            self.login_url = self.success_url
+            self.login_url = reverse_lazy(USERS_URL_NAME)
             return False
         return True
 
@@ -106,13 +109,13 @@ class UbdateUser(UserPassesTestMixin, SuccessMessageMixin, UpdateView):
         return redirect(self.login_url)
 
 
-class DeleteUser(UserPassesTestMixin, SuccessMessageMixin, DeleteView):
+class DeleteUser(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
     """User delete class."""
     model = User
     template_name = 'delete.html'
-    success_url = reverse_lazy('users')
+    success_url = reverse_lazy(USERS_URL_NAME)
 
-    login_url = reverse_lazy('login')
+    login_url = reverse_lazy(LOGIN_URL_NAME)
     success_message = 'Пользователь успешно удалён'
     error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
 
@@ -130,11 +133,9 @@ class DeleteUser(UserPassesTestMixin, SuccessMessageMixin, DeleteView):
 
     def test_func(self):
         obj = self.get_object()
-        if not self.request.user.is_authenticated:
-            return False
-        elif obj.pk != self.request.user.pk:
+        if self.request.user.is_authenticated and obj.pk != self.request.user.pk:
             self.error_message = 'У вас нет прав для изменения другого пользователя.'
-            self.login_url = self.success_url
+            self.login_url = reverse_lazy(USERS_URL_NAME)
             return False
         return True
 

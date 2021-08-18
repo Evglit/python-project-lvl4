@@ -3,20 +3,20 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 
 
-URL_USERS = 'users'
-URL_HOME = 'home'
-URL_LOGIN = 'login'
-URL_LOGOUT = 'logout'
-URL_CREATE_USER = 'create_user'
-URL_UPDATE_USER = 'update_user'
-URL_DELETE_USER = 'delete_user'
+USERS_URL_NAME = 'users'
+HOME_URL_NAME = 'home'
+LOGIN_URL_NAME = 'login'
+LOGOUT_URL_NAME = 'logout'
+CREATE_USER_URL_NAME = 'create_user'
+UPDATE_USER_URL_NAME = 'update_user'
+DELETE_USER_URL_NAME = 'delete_user'
 HTML_FORM = 'form.html'
 
 
 class HomeViewTest(TestCase):
 
     def test_view_uses_correct_template(self):
-        response = self.client.get(reverse(URL_HOME))
+        response = self.client.get(reverse(HOME_URL_NAME))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'home.html')
 
@@ -35,12 +35,12 @@ class UserListViewTest(TestCase):
             )
 
     def test_view_uses_correct_template(self):
-        response = self.client.get(reverse(URL_USERS))
+        response = self.client.get(reverse(USERS_URL_NAME))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'users.html')
 
     def test_lists_all_users(self):
-        response = self.client.get(reverse(URL_USERS))
+        response = self.client.get(reverse(USERS_URL_NAME))
         self.assertEqual(response.status_code, 200)
         self.assertTrue(len(response.context['users']) == 5)
 
@@ -58,23 +58,23 @@ class LoginLogoutViewTest(TestCase):
             )
 
     def test_view_uses_correct_template(self):
-        response = self.client.get(reverse(URL_LOGIN))
+        response = self.client.get(reverse(LOGIN_URL_NAME))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, HTML_FORM)
     
     def test_login_logout(self):
-        response = self.client.post(reverse(URL_LOGIN), {'username':'Username 0', 'password':'123'})
+        response = self.client.post(reverse(LOGIN_URL_NAME), {'username':'Username 0', 'password':'123'})
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse(URL_HOME))
+        self.assertRedirects(response, reverse(HOME_URL_NAME))
 
-        response = self.client.get(reverse(URL_HOME))
+        response = self.client.get(reverse(HOME_URL_NAME))
         self.assertEqual(str(response.context['user']), 'Username 0')
         
-        response = self.client.post(reverse(URL_LOGOUT))
+        response = self.client.post(reverse(LOGOUT_URL_NAME))
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse(URL_HOME))
+        self.assertRedirects(response, reverse(HOME_URL_NAME))
         
-        response = self.client.get(reverse(URL_HOME))
+        response = self.client.get(reverse(HOME_URL_NAME))
         self.assertEqual(str(response.context['user']), 'AnonymousUser')
 
 
@@ -91,13 +91,13 @@ class CreateUserViewTest(TestCase):
             )
     
     def test_view_uses_correct_template(self):
-        response = self.client.get(reverse(URL_CREATE_USER))
+        response = self.client.get(reverse(CREATE_USER_URL_NAME))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, HTML_FORM)
 
     def test_create(self):
         response = self.client.post(
-            reverse(URL_CREATE_USER),
+            reverse(CREATE_USER_URL_NAME),
                 {
                     'first_name': 'test',
                     'last_name': 'create',
@@ -107,7 +107,7 @@ class CreateUserViewTest(TestCase):
                 }
         )
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse(URL_LOGIN))
+        self.assertRedirects(response, reverse(LOGIN_URL_NAME))
         self.assertTrue(User.objects.get(username='test_create'))
 
 
@@ -124,19 +124,19 @@ class UpdateUserViewTest(TestCase):
             )
 
     def test_redirect_if_not_logged_in(self):
-        response = self.client.get(reverse(URL_UPDATE_USER, kwargs={'pk':1}))
+        response = self.client.get(reverse(UPDATE_USER_URL_NAME, kwargs={'pk':1}))
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.url.startswith(reverse(URL_LOGIN)))
+        self.assertTrue(response.url.startswith(reverse(LOGIN_URL_NAME)))
 
     def test_redirect_if_logged_in_but_not_passed_test(self):
         self.client.login(username='Username 0', password='123')
-        response = self.client.get(reverse(URL_UPDATE_USER, kwargs={'pk':2}))
+        response = self.client.get(reverse(UPDATE_USER_URL_NAME, kwargs={'pk':2}))
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.url.startswith(reverse(URL_USERS)))
+        self.assertTrue(response.url.startswith(reverse(USERS_URL_NAME)))
 
     def test_logged_in_passed_test_uses_correct_template(self):
         self.client.login(username='Username 0', password='123')
-        response = self.client.get(reverse(URL_UPDATE_USER, kwargs={'pk':1}))
+        response = self.client.get(reverse(UPDATE_USER_URL_NAME, kwargs={'pk':1}))
         self.assertEqual(str(response.context['user']), 'Username 0')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'form.html')
@@ -144,7 +144,7 @@ class UpdateUserViewTest(TestCase):
     def test_update(self):
         self.client.login(username='Username 0', password='123')
         response = self.client.post(
-            reverse(URL_UPDATE_USER, kwargs={'pk':1}),
+            reverse(UPDATE_USER_URL_NAME, kwargs={'pk':1}),
                 {
                     'first_name': 'test',
                     'last_name': 'update',
@@ -154,7 +154,7 @@ class UpdateUserViewTest(TestCase):
                 }
         )
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.url.startswith(reverse(URL_USERS)))
+        self.assertTrue(response.url.startswith(reverse(USERS_URL_NAME)))
         self.assertEqual(User.objects.get(pk=1).username, 'test_update')
 
 
@@ -171,26 +171,26 @@ class DeleteUserViewTest(TestCase):
             )
 
     def test_redirect_if_not_logged_in(self):
-        response = self.client.get(reverse(URL_DELETE_USER, kwargs={'pk':1}))
+        response = self.client.get(reverse(DELETE_USER_URL_NAME, kwargs={'pk':1}))
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.url.startswith(reverse(URL_LOGIN)))
+        self.assertTrue(response.url.startswith(reverse(LOGIN_URL_NAME)))
 
     def test_redirect_if_logged_in_but_not_passed_test(self):
         self.client.login(username='Username 0', password='123')
-        response = self.client.get(reverse(URL_DELETE_USER, kwargs={'pk':2}))
+        response = self.client.get(reverse(DELETE_USER_URL_NAME, kwargs={'pk':2}))
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.url.startswith(reverse(URL_USERS)))
+        self.assertTrue(response.url.startswith(reverse(USERS_URL_NAME)))
 
     def test_logged_in_passed_test_uses_correct_template(self):
         self.client.login(username='Username 0', password='123')
-        response = self.client.get(reverse(URL_DELETE_USER, kwargs={'pk':1}))
+        response = self.client.get(reverse(DELETE_USER_URL_NAME, kwargs={'pk':1}))
         self.assertEqual(str(response.context['user']), 'Username 0')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'delete.html')
 
     def test_delete(self):
         self.client.login(username='Username 0', password='123')
-        response = self.client.post(reverse(URL_DELETE_USER, kwargs={'pk':1}))
+        response = self.client.post(reverse(DELETE_USER_URL_NAME, kwargs={'pk':1}))
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.url.startswith(reverse(URL_USERS)))
+        self.assertTrue(response.url.startswith(reverse(USERS_URL_NAME)))
         self.assertFalse(User.objects.filter(pk=1))

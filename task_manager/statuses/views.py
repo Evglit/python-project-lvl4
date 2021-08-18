@@ -1,6 +1,6 @@
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import Statuses
+from .models import Status
 from .forms import CreateStatusForm
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
@@ -9,12 +9,16 @@ from django.contrib import messages
 from django.shortcuts import redirect
 
 
-class StatusesPage(LoginRequiredMixin, ListView):
+LOGIN_URL_NAME = 'login'
+STATUSES_URL_NAME = 'statuses'
+
+
+class StatuseListPage(LoginRequiredMixin, ListView):
     """Class for creating a status page."""
-    model = Statuses
+    model = Status
     template_name = 'statuses.html'
     context_object_name = 'statuses'
-    login_url = reverse_lazy('login')
+    login_url = reverse_lazy(LOGIN_URL_NAME)
     error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
 
     def get_context_data(self, **kwargs):
@@ -31,8 +35,8 @@ class CreateStatus(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     """Status registration class."""
     form_class = CreateStatusForm
     template_name = 'form.html'
-    success_url = reverse_lazy('statuses')
-    login_url = reverse_lazy('login')
+    success_url = reverse_lazy(STATUSES_URL_NAME)
+    login_url = reverse_lazy(LOGIN_URL_NAME)
     success_message = 'Статус успешно создан'
     error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
 
@@ -49,11 +53,11 @@ class CreateStatus(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
 class UpdateStatus(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     """Status update class."""
-    model = Statuses
+    model = Status
     form_class = CreateStatusForm
     template_name = 'form.html'
-    success_url = reverse_lazy('statuses')
-    login_url = reverse_lazy('login')
+    success_url = reverse_lazy(STATUSES_URL_NAME)
+    login_url = reverse_lazy(LOGIN_URL_NAME)
     success_massage = 'Статус успешно изменён'
     error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
 
@@ -65,15 +69,15 @@ class UpdateStatus(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 
     def handle_no_permission(self):
         messages.error(self.request, self.error_message)
-        return redirect(self.login_url)
+        return super(UpdateStatus, self).handle_no_permission()
 
 
 class DeleteStatus(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     "Status delete class"
-    model = Statuses
+    model = Status
     template_name = 'delete.html'
-    success_url = reverse_lazy('statuses')
-    login_url = reverse_lazy('login')
+    success_url = reverse_lazy(STATUSES_URL_NAME)
+    login_url = reverse_lazy(LOGIN_URL_NAME)
     success_message = 'Статус успешно удалён'
     error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
 

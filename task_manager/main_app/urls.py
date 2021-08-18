@@ -6,7 +6,7 @@ urlpatterns = [
     path('', views.HomePage.as_view(), name='home'),
     path(
         'users/',
-        views.UsersPage.as_view(),
+        views.UserListPage.as_view(),
         name='users'
     ),
     path(

@@ -9,12 +9,17 @@ from django.contrib import messages
 from django.shortcuts import redirect
 
 
+LOGIN_URL_NAME = 'login'
+TASKS_URL_NAME = 'tasks'
+HTML_FORM = 'form.html'
+
+
 class TaskListPage(LoginRequiredMixin, ListView):
     """Class for creating a tasks page."""
     model = Task
     template_name = 'tasks.html'
     context_object_name = 'tasks'
-    login_url = reverse_lazy('login')
+    login_url = reverse_lazy(LOGIN_URL_NAME)
     error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
 
     def get_context_data(self, **kwargs):
@@ -32,7 +37,7 @@ class TaskDetailPage(LoginRequiredMixin, DetailView):
     model = Task
     template_name = 'task_detail.html'
     context_object_name = 'task'
-    login_url = reverse_lazy('login')
+    login_url = reverse_lazy(LOGIN_URL_NAME)
     error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
 
     def get_context_data(self, **kwargs):
@@ -48,9 +53,9 @@ class TaskDetailPage(LoginRequiredMixin, DetailView):
 class CreateTask(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     """Task registration class."""
     form_class = TaskForm
-    template_name = 'form.html'
-    success_url = reverse_lazy('tasks')
-    login_url = reverse_lazy('login')
+    template_name = HTML_FORM
+    success_url = reverse_lazy(TASKS_URL_NAME)
+    login_url = reverse_lazy(LOGIN_URL_NAME)
     success_message = 'Статус успешно создан'
     error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
 
@@ -73,9 +78,9 @@ class UpdateTask(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     """Task update class."""
     model = Task
     form_class = TaskForm
-    template_name = 'form.html'
-    success_url = reverse_lazy('tasks')
-    login_url = reverse_lazy('login')
+    template_name = HTML_FORM
+    success_url = reverse_lazy(TASKS_URL_NAME)
+    login_url = reverse_lazy(LOGIN_URL_NAME)
     success_massage = 'Задача успешно изменена'
     error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
 
@@ -94,8 +99,8 @@ class DeleteTask(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, D
     "Task delete class"
     model = Task
     template_name = 'delete.html'
-    success_url = reverse_lazy('tasks')
-    login_url = reverse_lazy('login')
+    success_url = reverse_lazy(TASKS_URL_NAME)
+    login_url = reverse_lazy(LOGIN_URL_NAME)
     success_message = 'Задача успешно удалена'
     error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
 
@@ -116,11 +121,9 @@ class DeleteTask(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, D
     
     def test_func(self):
         obj = self.get_object()
-        if not self.request.user.is_authenticated:
-            return False
-        elif obj.pk != self.request.user.pk:
+        if self.request.user.is_authenticated and obj.pk != self.request.user.pk:
             self.error_message = 'У вас нет прав для изменения другого пользователя.'
-            self.login_url = self.success_url
+            self.login_url = reverse_lazy(TASKS_URL_NAME)
             return False
         return True
 
