@@ -1,16 +1,13 @@
+from django.urls import reverse
 from django.test import TestCase
 from django.contrib.auth.models import User
-from django.urls import reverse
+from .views import FORM_HTML, USERS_URL_NAME, HOME_URL_NAME, LOGIN_URL_NAME, FORM_HTML
 
 
-USERS_URL_NAME = 'users'
-HOME_URL_NAME = 'home'
-LOGIN_URL_NAME = 'login'
 LOGOUT_URL_NAME = 'logout'
 CREATE_USER_URL_NAME = 'create_user'
 UPDATE_USER_URL_NAME = 'update_user'
 DELETE_USER_URL_NAME = 'delete_user'
-HTML_FORM = 'form.html'
 
 
 class HomeViewTest(TestCase):
@@ -60,7 +57,7 @@ class LoginLogoutViewTest(TestCase):
     def test_view_uses_correct_template(self):
         response = self.client.get(reverse(LOGIN_URL_NAME))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, HTML_FORM)
+        self.assertTemplateUsed(response, FORM_HTML)
     
     def test_login_logout(self):
         response = self.client.post(reverse(LOGIN_URL_NAME), {'username':'Username 0', 'password':'123'})
@@ -93,7 +90,7 @@ class CreateUserViewTest(TestCase):
     def test_view_uses_correct_template(self):
         response = self.client.get(reverse(CREATE_USER_URL_NAME))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, HTML_FORM)
+        self.assertTemplateUsed(response, FORM_HTML)
 
     def test_create(self):
         response = self.client.post(

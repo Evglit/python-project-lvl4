@@ -1,15 +1,14 @@
-from django.test import TestCase
-from task_manager.statuses.models import Status
-from django.contrib.auth.models import User
 from django.urls import reverse
+from django.test import TestCase
+from django.contrib.auth.models import User
+from task_manager.statuses.models import Status
+from task_manager.users.views import LOGIN_URL_NAME, FORM_HTML, DELETE_HTML
+from task_manager.statuses.views import STATUSES_URL_NAME
 
 
-LOGIN_URL_NAME = 'login'
-STATUSES_URL_NAME = 'statuses'
 CREATE_STATUS_URL_NAME = 'create_status'
 UPDATE_STATUS_URL_NAME = 'update_status'
 DELETE_STATUS_URL_NAME = 'delete_status'
-HTML_FORM = 'form.html'
 
 
 class StatusListViewTest(TestCase):
@@ -66,7 +65,7 @@ class CreateStatusViewTest(TestCase):
         response = self.client.get(reverse(CREATE_STATUS_URL_NAME))
         self.assertEqual(str(response.context['user']), 'Username 0')
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, HTML_FORM)
+        self.assertTemplateUsed(response, FORM_HTML)
         
     def test_create(self):
         self.client.login(username='Username 0', password='123')
@@ -102,7 +101,7 @@ class UpdateStatusViewTest(TestCase):
         response = self.client.get(reverse(UPDATE_STATUS_URL_NAME, kwargs={'pk':1}))
         self.assertEqual(str(response.context['user']), 'Username 0')
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, HTML_FORM)
+        self.assertTemplateUsed(response, FORM_HTML)
 
     def test_update(self):
         new_name = 'Updation test'
@@ -142,7 +141,7 @@ class DeleteStatusViewTest(TestCase):
         response = self.client.get(reverse(DELETE_STATUS_URL_NAME, kwargs={'pk':1}))
         self.assertEqual(str(response.context['user']), 'Username 0')
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'delete.html')
+        self.assertTemplateUsed(response, DELETE_HTML)
     
     def test_delete(self):
         self.client.login(username='Username 0', password='123')

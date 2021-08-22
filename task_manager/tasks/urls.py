@@ -1,5 +1,5 @@
 from django.urls import path
-from task_manager.tasks import views
+from . import views
 
 
 urlpatterns = [

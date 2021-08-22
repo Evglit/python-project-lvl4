@@ -1,20 +1,23 @@
 from django.urls import reverse_lazy
+from django.shortcuts import redirect
 from django.views.generic import ListView
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.shortcuts import redirect
-from django.contrib import messages
-from .forms import CreateUserForm
+from .forms import UserForm
+from task_manager.tasks.models import Task
 
 
 LOGIN_URL_NAME = 'login'
 HOME_URL_NAME = 'home'
 USERS_URL_NAME = 'users'
+FORM_HTML = 'form.html'
+DELETE_HTML = 'delete.html'
 
 
 class HomePage(TemplateView):
@@ -40,8 +43,8 @@ class UserListPage(ListView):
 
 class CreateUser(SuccessMessageMixin, CreateView):
     """User registration class."""
-    form_class = CreateUserForm
-    template_name = 'form.html'
+    form_class = UserForm
+    template_name = FORM_HTML
     success_url = reverse_lazy(LOGIN_URL_NAME)
     success_message = 'Пользователь успешно зарегистрирован'
 
@@ -55,7 +58,7 @@ class CreateUser(SuccessMessageMixin, CreateView):
 class LoginUser(SuccessMessageMixin, LoginView):
     """User login class."""
     form_class = AuthenticationForm
-    template_name = 'form.html'
+    template_name = FORM_HTML
     success_message = 'Вы залогинены'
 
     def get_context_data(self, **kwargs):
@@ -82,8 +85,8 @@ class LogoutUser(SuccessMessageMixin, LogoutView):
 class UbdateUser(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
     """User update class."""
     model = User
-    form_class = CreateUserForm
-    template_name = 'form.html'
+    form_class = UserForm
+    template_name = FORM_HTML
     success_url = reverse_lazy(USERS_URL_NAME)
 
     login_url = reverse_lazy(LOGIN_URL_NAME)
@@ -135,6 +138,10 @@ class DeleteUser(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, D
         obj = self.get_object()
         if self.request.user.is_authenticated and obj.pk != self.request.user.pk:
             self.error_message = 'У вас нет прав для изменения другого пользователя.'
+            self.login_url = reverse_lazy(USERS_URL_NAME)
+            return False
+        if Task.objects.filter(author=self.request.user.username) or Task.objects.filter(executer=self.request.user.pk):
+            self.error_message = 'Невозможно удалить пользователя, потому что он используется'
             self.login_url = reverse_lazy(USERS_URL_NAME)
             return False
         return True

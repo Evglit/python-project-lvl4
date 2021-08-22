@@ -12,36 +12,34 @@
       <hr>
       <div class="container">
         <div class="row p-1">
-          <div class="col">Автор</div>
+          <div class="col">{% translate "Автор" %}</div>
           <div class="col">{{ task.author }}</div>
         </div>
         <div class="row p-1">
-          <div class="col">Исполнитель</div>
+          <div class="col">{% translate "Исполнитель" %}</div>
           <div class="col">{{ task.executer }}</div>
         </div>
         <div class="row p-1">
-          <div class="col">Статус</div>
+          <div class="col">{% translate "Статус" %}</div>
           <div class="col">{{ task.status }}</div>
         </div>
         <div class="row p-1">
-          <div class="col">Дата создания</div>
+          <div class="col">{% translate "Дата создания" %}</div>
           <div class="col">{{ task.time_create }}</div>
         </div>
         <div class="row p-1">
           <div class="col">
-            <h6>Метки:</h6>
+            <h6>{% translate "Метки:" %}</h6>
             <ul>
-              
-                <li></li>
-              
+                <li>{{ task.label_set }}</li>
             </ul>
           </div>
         </div>
         <div class="row p-1">
           <div class="col">
-            <a href="{% url 'update_task' task.pk %}">Изменить</a>
+            <a href="{% url 'update_task' task.pk %}">{% translate "Изменить" %}</a>
             <br>
-            <a href="{% url 'delete_task' task.pk %}">Удалить</a>
+            <a href="{% url 'delete_task' task.pk %}">{% translate "Удалить" %}</a>
           </div>
         </div>
       </div>

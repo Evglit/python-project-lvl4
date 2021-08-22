@@ -1,17 +1,16 @@
+from django.urls import reverse
 from django.test import TestCase
+from django.contrib.auth.models import User
 from task_manager.tasks.models import Task
 from task_manager.statuses.models import Status
-from django.contrib.auth.models import User
-from django.urls import reverse
+from task_manager.users.views import LOGIN_URL_NAME, FORM_HTML, DELETE_HTML
+from task_manager.tasks.views import TASKS_URL_NAME
 
 
-LOGIN_URL_NAME = 'login'
-TASKS_URL_NAME = 'tasks'
 TAKS_DETAIL_URL_NAME = 'task_detail'
 CREATE_TASK_URL_NAME = 'create_task'
 UPDATE_TASK_URL_NAME = 'update_task'
 DELETE_TASK_URL_NAME = 'delete_task'
-HTML_FORM = 'form.html'
 
 
 class TaskListViewTest(TestCase):
@@ -126,7 +125,7 @@ class CreateTaskViewTest(TestCase):
         response = self.client.get(reverse(CREATE_TASK_URL_NAME))
         self.assertEqual(str(response.context['user']), 'Username 0')
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, HTML_FORM)
+        self.assertTemplateUsed(response, FORM_HTML)
 
     def test_create(self):
         self.client.login(username='Username 0', password='123')
@@ -180,7 +179,7 @@ class UpdateTaskViewTest(TestCase):
         response = self.client.get(reverse(UPDATE_TASK_URL_NAME, kwargs={'pk':1}))
         self.assertEqual(str(response.context['user']), 'Username 0')
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, HTML_FORM)
+        self.assertTemplateUsed(response, FORM_HTML)
 
     def test_update(self):
         self.client.login(username='Username 0', password='123')
@@ -240,7 +239,7 @@ class DeleteTaskViewTest(TestCase):
         response = self.client.get(reverse(DELETE_TASK_URL_NAME, kwargs={'pk':1}))
         self.assertEqual(str(response.context['user']), 'Username 0')
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'delete.html')
+        self.assertTemplateUsed(response, DELETE_HTML)
 
     def test_delete(self):
         self.client.login(username='Username 0', password='123')

@@ -3,32 +3,31 @@
 {% load bootstrap4 %}
 
 {% block content %}
-<a class="nav-link" href="{% url 'create_status' %}"> {% translate "Создать статус" %}</a>
-<table class="table table-striped">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>{% translate "Имя" %}</th>
-        <th>{% translate "Дата создания" %}</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-
-      {% for status in statuses %}
+  <a class="nav-link" href="{% url 'create_status' %}"> {% translate "Создать статус" %}</a>
+  <table class="table table-striped">
+      <thead>
         <tr>
-          <td>{{ status.pk }}</td>
-          <td>{{ status.name }}</td>
-          <td>{{ status.time_create }}</td>
-          <td>
-            <a href="{% url 'update_status' status.pk %}">{% translate "Изменить" %}</a>
-            <br>
-            <a href="{% url 'delete_status' status.pk %}">{% translate "Удалить" %}</a>
-          </td>
+          <th>ID</th>
+          <th>{% translate "Имя" %}</th>
+          <th>{% translate "Дата создания" %}</th>
+          <th></th>
         </tr>
-      {% endfor %}
+      </thead>
+      <tbody>
 
-    </tbody>
-</table>
+        {% for status in statuses %}
+          <tr>
+            <td>{{ status.pk }}</td>
+            <td>{{ status.name }}</td>
+            <td>{{ status.time_create }}</td>
+            <td>
+              <a href="{% url 'update_status' status.pk %}">{% translate "Изменить" %}</a>
+              <br>
+              <a href="{% url 'delete_status' status.pk %}">{% translate "Удалить" %}</a>
+            </td>
+          </tr>
+        {% endfor %}
 
+      </tbody>
+  </table>
 {% endblock %}

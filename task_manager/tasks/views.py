@@ -1,21 +1,20 @@
+from django.urls import reverse_lazy
+from django.shortcuts import redirect
+from django.contrib import messages
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import Task
-from .forms import TaskForm
-from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib import messages
-from django.shortcuts import redirect
+from task_manager.users.views import LOGIN_URL_NAME, FORM_HTML, DELETE_HTML
+from .models import Task
+from .forms import TaskForm
 
 
-LOGIN_URL_NAME = 'login'
 TASKS_URL_NAME = 'tasks'
-HTML_FORM = 'form.html'
 
 
 class TaskListPage(LoginRequiredMixin, ListView):
-    """Class for creating a tasks page."""
+    """Class for creating a task list page."""
     model = Task
     template_name = 'tasks.html'
     context_object_name = 'tasks'
@@ -33,7 +32,7 @@ class TaskListPage(LoginRequiredMixin, ListView):
 
 
 class TaskDetailPage(LoginRequiredMixin, DetailView):
-    """Class for creating a tasks page."""
+    """Class for creating a task detail page."""
     model = Task
     template_name = 'task_detail.html'
     context_object_name = 'task'
@@ -42,6 +41,7 @@ class TaskDetailPage(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        print(self.get_object())
         context['title'] = 'Просмотр задачи'
         return context
 
@@ -51,9 +51,9 @@ class TaskDetailPage(LoginRequiredMixin, DetailView):
 
 
 class CreateTask(LoginRequiredMixin, SuccessMessageMixin, CreateView):
-    """Task registration class."""
+    """Task create class."""
     form_class = TaskForm
-    template_name = HTML_FORM
+    template_name = FORM_HTML
     success_url = reverse_lazy(TASKS_URL_NAME)
     login_url = reverse_lazy(LOGIN_URL_NAME)
     success_message = 'Статус успешно создан'
@@ -78,7 +78,7 @@ class UpdateTask(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     """Task update class."""
     model = Task
     form_class = TaskForm
-    template_name = HTML_FORM
+    template_name = FORM_HTML
     success_url = reverse_lazy(TASKS_URL_NAME)
     login_url = reverse_lazy(LOGIN_URL_NAME)
     success_massage = 'Задача успешно изменена'
@@ -98,7 +98,7 @@ class UpdateTask(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 class DeleteTask(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
     "Task delete class"
     model = Task
-    template_name = 'delete.html'
+    template_name = DELETE_HTML
     success_url = reverse_lazy(TASKS_URL_NAME)
     login_url = reverse_lazy(LOGIN_URL_NAME)
     success_message = 'Задача успешно удалена'
@@ -121,8 +121,8 @@ class DeleteTask(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, D
     
     def test_func(self):
         obj = self.get_object()
-        if self.request.user.is_authenticated and obj.pk != self.request.user.pk:
-            self.error_message = 'У вас нет прав для изменения другого пользователя.'
+        if self.request.user.is_authenticated and obj.author != self.request.user.username:
+            self.error_message = 'Задачу может удалить только её автор'
             self.login_url = reverse_lazy(TASKS_URL_NAME)
             return False
         return True

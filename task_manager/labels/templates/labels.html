@@ -1,0 +1,33 @@
+{% extends './base.html' %}
+{% load i18n %}
+{% load bootstrap4 %}
+
+{% block content %}
+    <a class="nav-link" href="{% url 'create_label' %}"> {% translate "Создать метку" %}</a>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>{% translate "Имя" %}</th>
+            <th>{% translate "Дата создания" %}</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for label in labels %}
+            <tr>
+            <td>{{ label.pk }}</td>
+            <td>{{ label.name }}</td>
+            <td>{{ label.time_create }}</td>
+            <td>
+                <a href="{% url 'update_label' label.pk %}">{% translate "Изменить" %}</a>
+                <br>
+                <a href="{% url 'delete_label' label.pk %}">{% translate "Удалить" %}</a>
+            </td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+{% endblock %}
