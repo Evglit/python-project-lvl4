@@ -72,7 +72,7 @@ class UpdateLabel(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return redirect(self.login_url)
 
 
-class DeleteLabel(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class DeleteLabel(LoginRequiredMixin, DeleteView):
     "Label delete class"
     model = Label
     template_name = DELETE_HTML
@@ -89,16 +89,12 @@ class DeleteLabel(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return context
 
     def delete(self, request, *args, **kwargs):
-        messages.success(request, self.success_message)
-        return super(DeleteLabel, self).delete(request, *args, **kwargs)
-
-    def test_func(self):
         obj = self.get_object()
         if Task.objects.filter(labels=obj.pk):
-            self.error_message = 'Невозможно удалить метку, потому что она используется'
-            self.login_url = reverse_lazy(LABELS_URL_NAME)
-            return False
-        return True
+            messages.error(self.request, 'Невозможно удалить статус, потому что он используется')
+            return redirect(reverse_lazy(LABELS_URL_NAME))
+        messages.success(request, self.success_message)
+        return super(DeleteLabel, self).delete(request, *args, **kwargs)
 
     def handle_no_permission(self):
         messages.error(self.request, self.error_message)

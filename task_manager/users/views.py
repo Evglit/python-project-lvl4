@@ -131,17 +131,16 @@ class DeleteUser(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, D
         return context
 
     def delete(self, request, *args, **kwargs):
+        if Task.objects.filter(author=self.request.user.pk) or Task.objects.filter(executer=self.request.user.pk):
+            messages.error(self.request, 'Невозможно удалить пользователя, потому что он используется')
+            return redirect(reverse_lazy(USERS_URL_NAME))
         messages.success(self.request, self.success_message)
-        return super(DeleteUser, self).delete(request, *args, **kwargs)
+        return super().delete(request, *args, **kwargs)
 
     def test_func(self):
         obj = self.get_object()
         if self.request.user.is_authenticated and obj.pk != self.request.user.pk:
             self.error_message = 'У вас нет прав для изменения другого пользователя.'
-            self.login_url = reverse_lazy(USERS_URL_NAME)
-            return False
-        if Task.objects.filter(author=self.request.user.username) or Task.objects.filter(executer=self.request.user.pk):
-            self.error_message = 'Невозможно удалить пользователя, потому что он используется'
             self.login_url = reverse_lazy(USERS_URL_NAME)
             return False
         return True

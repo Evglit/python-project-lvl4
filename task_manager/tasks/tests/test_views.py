@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from task_manager.tasks.models import Task
 from task_manager.statuses.models import Status
+from task_manager.labels.models import Label
 from task_manager.users.views import LOGIN_URL_NAME, FORM_HTML, DELETE_HTML
 from task_manager.tasks.views import TASKS_URL_NAME
 
@@ -28,10 +29,14 @@ class TaskListViewTest(TestCase):
         number_of_statuses = 1
         for status_num in range(number_of_statuses):
             Status.objects.create(name=f'Status {status_num}')
-        
+
+        number_of_labels = 1
+        for labels_num in range(number_of_labels):
+            Label.objects.create(name=f'Label {labels_num}')
+
         number_of_tasks = 5
         for task_num in range(number_of_tasks):
-            Task.objects.create(
+            a = Task.objects.create(
                 name=f'Task {task_num}',
                 description=f'Task description {task_num}',
                 status=Status.objects.get(pk=1),
@@ -67,7 +72,11 @@ class TaskDetailViewTest(TestCase):
         number_of_statuses = 1
         for status_num in range(number_of_statuses):
             Status.objects.create(name=f'Status {status_num}')
-        
+
+        number_of_labels = 1
+        for labels_num in range(number_of_labels):
+            Label.objects.create(name=f'Label {labels_num}')
+
         number_of_tasks = 1
         for task_num in range(number_of_tasks):
             Task.objects.create(
@@ -75,7 +84,7 @@ class TaskDetailViewTest(TestCase):
                 description=f'Task description {task_num}',
                 status=Status.objects.get(pk=1),
                 executer=User.objects.get(pk=2),
-                author=User.objects.get(pk=1)
+                author=User.objects.get(pk=1),
             )
 
     def test_redirect_if_not_logged_in(self):
@@ -105,6 +114,10 @@ class CreateTaskViewTest(TestCase):
         number_of_statuses = 1
         for status_num in range(number_of_statuses):
             Status.objects.create(name=f'Status {status_num}')
+
+        number_of_labels = 1
+        for labels_num in range(number_of_labels):
+            Label.objects.create(name=f'Label {labels_num}')
         
         number_of_tasks = 2
         for task_num in range(number_of_tasks):
@@ -113,7 +126,7 @@ class CreateTaskViewTest(TestCase):
                 description=f'Task description {task_num}',
                 status=Status.objects.get(pk=1),
                 executer=User.objects.get(pk=2),
-                author=User.objects.get(pk=1)
+                author=User.objects.get(pk=1),
             )
     
     def test_redirect_if_not_logged_in(self):
@@ -134,8 +147,8 @@ class CreateTaskViewTest(TestCase):
                 {
                     'name': 'Task creation test',
                     'description': 'Task creation test',
-                    'status': Status.objects.get(pk=1),
-                    'executer': User.objects.get(pk=2),
+                    'status': '1',
+                    'executer': '2',
                 }
         )
         self.assertEqual(response.status_code, 302)
@@ -159,6 +172,10 @@ class UpdateTaskViewTest(TestCase):
         number_of_statuses = 1
         for status_num in range(number_of_statuses):
             Status.objects.create(name=f'Status {status_num}')
+
+        number_of_labels = 1
+        for labels_num in range(number_of_labels):
+            Label.objects.create(name=f'Label {labels_num}')
         
         number_of_tasks = 1
         for task_num in range(number_of_tasks):
@@ -167,7 +184,7 @@ class UpdateTaskViewTest(TestCase):
                 description=f'Task description {task_num}',
                 status=Status.objects.get(pk=1),
                 executer=User.objects.get(pk=2),
-                author=User.objects.get(pk=1)
+                author=User.objects.get(pk=1),
             )
     
     def test_redirect_if_not_logged_in(self):
@@ -188,8 +205,8 @@ class UpdateTaskViewTest(TestCase):
                 {
                     'name': 'Task update test',
                     'description': 'Task update test',
-                    'status': Status.objects.get(pk=1),
-                    'executer': User.objects.get(pk=2),
+                    'status': '1',
+                    'executer': '2',
                 }
         )
         self.assertEqual(response.status_code, 302)
@@ -200,7 +217,7 @@ class UpdateTaskViewTest(TestCase):
 class DeleteTaskViewTest(TestCase):
 
     def setUp(self):
-        number_of_users = 2
+        number_of_users = 3
         for user_num in range(number_of_users):
             User.objects.create_user(
                 first_name=f'First name {user_num}',
@@ -212,6 +229,10 @@ class DeleteTaskViewTest(TestCase):
         number_of_statuses = 1
         for status_num in range(number_of_statuses):
             Status.objects.create(name=f'Status {status_num}')
+
+        number_of_labels = 1
+        for labels_num in range(number_of_labels):
+            Label.objects.create(name=f'Label {labels_num}')
         
         number_of_tasks = 2
         for task_num in range(number_of_tasks):
@@ -220,7 +241,7 @@ class DeleteTaskViewTest(TestCase):
                 description=f'Task description {task_num}',
                 status=Status.objects.get(pk=1),
                 executer=User.objects.get(pk=2),
-                author=User.objects.get(pk=1)
+                author=User.objects.get(pk=1),
             )
 
     def test_redirect_if_not_logged_in(self):

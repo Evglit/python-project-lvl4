@@ -48,8 +48,6 @@ class TaskModelTest(TestCase):
         task = Task.objects.get(id=1)
         max_length = task._meta.get_field('name').max_length
         self.assertEquals(max_length, 100)
-        max_length = task._meta.get_field('author').max_length
-        self.assertEquals(max_length, 100)
 
     def test_object_name(self):
         task = Task.objects.get(id=1)

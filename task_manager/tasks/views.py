@@ -39,9 +39,11 @@ class TaskDetailPage(LoginRequiredMixin, DetailView):
     login_url = reverse_lazy(LOGIN_URL_NAME)
     error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
 
+    def post(self, *args, **kwargs):
+        return super().post(*args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print(self.get_object())
         context['title'] = 'Просмотр задачи'
         return context
 
@@ -58,6 +60,9 @@ class CreateTask(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     login_url = reverse_lazy(LOGIN_URL_NAME)
     success_message = 'Статус успешно создан'
     error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
+
+    def post(self, *args, **kwargs):
+        return super().post(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -114,14 +119,10 @@ class DeleteTask(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, D
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, self.success_message)
         return super(DeleteTask, self).delete(request, *args, **kwargs)
-
-    def test_func(self):
-        obj = self.get_object()
-        return str(obj.author) == str(self.request.user)
     
     def test_func(self):
         obj = self.get_object()
-        if self.request.user.is_authenticated and obj.author != self.request.user.username:
+        if self.request.user.is_authenticated and obj.author.pk != self.request.user.pk:
             self.error_message = 'Задачу может удалить только её автор'
             self.login_url = reverse_lazy(TASKS_URL_NAME)
             return False

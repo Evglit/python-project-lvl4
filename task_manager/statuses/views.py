@@ -4,7 +4,7 @@ from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from task_manager.users.views import LOGIN_URL_NAME, FORM_HTML, DELETE_HTML
 from task_manager.tasks.models import Task
 from .models import Status
@@ -73,7 +73,7 @@ class UpdateStatus(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return super(UpdateStatus, self).handle_no_permission()
 
 
-class DeleteStatus(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
+class DeleteStatus(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     "Status delete class"
     model = Status
     template_name = DELETE_HTML
@@ -90,16 +90,12 @@ class DeleteStatus(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin,
         return context
 
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request, self.success_message)
-        return super(DeleteStatus, self).delete(request, *args, **kwargs)
-    
-    def test_func(self):
         obj = self.get_object()
         if Task.objects.filter(status=obj.pk):
-            self.error_message = 'Невозможно удалить статус, потому что он используется'
-            self.login_url = reverse_lazy(STATUSES_URL_NAME)
-            return False
-        return True
+            messages.error(self.request, 'Невозможно удалить статус, потому что он используется')
+            return redirect(reverse_lazy(STATUSES_URL_NAME))
+        messages.success(self.request, self.success_message)
+        return super(DeleteStatus, self).delete(request, *args, **kwargs)
 
     def handle_no_permission(self):
         messages.error(self.request, self.error_message)
