@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from task_manager.users.views import LOGIN_URL_NAME, FORM_HTML, DELETE_HTML
 from task_manager.tasks.models import Task
@@ -54,6 +54,7 @@ class CreateLabel(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
 class UpdateLabel(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     """Label update class."""
+    model = Label
     form_class = LabelForm
     template_name = FORM_HTML
     success_url = reverse_lazy(LABELS_URL_NAME)
@@ -69,7 +70,7 @@ class UpdateLabel(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 
     def handle_no_permission(self):
         messages.error(self.request, self.error_message)
-        return redirect(self.login_url)
+        return super().handle_no_permission()
 
 
 class DeleteLabel(LoginRequiredMixin, DeleteView):
@@ -94,7 +95,7 @@ class DeleteLabel(LoginRequiredMixin, DeleteView):
             messages.error(self.request, 'Невозможно удалить статус, потому что он используется')
             return redirect(reverse_lazy(LABELS_URL_NAME))
         messages.success(request, self.success_message)
-        return super(DeleteLabel, self).delete(request, *args, **kwargs)
+        return super().delete(request, *args, **kwargs)
 
     def handle_no_permission(self):
         messages.error(self.request, self.error_message)

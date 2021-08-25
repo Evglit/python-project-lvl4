@@ -1,17 +1,17 @@
 from django.urls import reverse
 from django.test import TestCase
 from django.contrib.auth.models import User
-from task_manager.statuses.models import Status
+from task_manager.labels.models import Label
 from task_manager.users.views import LOGIN_URL_NAME, FORM_HTML, DELETE_HTML
-from task_manager.statuses.views import STATUSES_URL_NAME
+from task_manager.labels.views import LABELS_URL_NAME
 
 
-CREATE_STATUS_URL_NAME = 'create_status'
-UPDATE_STATUS_URL_NAME = 'update_status'
-DELETE_STATUS_URL_NAME = 'delete_status'
+CREATE_LABEL_URL_NAME = 'create_label'
+UPDATE_LABEL_URL_NAME = 'update_label'
+DELETE_LABEL_URL_NAME = 'delete_label'
 
 
-class StatusListViewTest(TestCase):
+class TestListLabelView(TestCase):
 
     def setUp(self):
         number_of_users = 1
@@ -23,24 +23,24 @@ class StatusListViewTest(TestCase):
                 password='123',
             )
 
-        number_of_statuses = 5
-        for status_num in range(number_of_statuses):
-            Status.objects.create(name=f'Status {status_num}')
+        number_of_label = 5
+        for label_num in range(number_of_label):
+            Label.objects.create(name=f'Label {label_num}')
 
     def test_redirect_if_not_logged_in(self):
-        response = self.client.get(reverse(STATUSES_URL_NAME))
+        response = self.client.get(reverse(LABELS_URL_NAME))
         self.assertRedirects(response, reverse(LOGIN_URL_NAME))
 
     def test_logged_in_uses_correct_template(self):
         self.client.login(username='Username 0', password='123')
-        response = self.client.get(reverse(STATUSES_URL_NAME))
+        response = self.client.get(reverse(LABELS_URL_NAME))
         self.assertEqual(str(response.context['user']), 'Username 0')
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'statuses.html')
-        self.assertTrue(len(response.context[STATUSES_URL_NAME]) == 5)
+        self.assertTemplateUsed(response, 'labels.html')
+        self.assertTrue(len(response.context[LABELS_URL_NAME]) == 5)
 
 
-class CreateStatusViewTest(TestCase):
+class CreateLabelViewTest(TestCase):
 
     def setUp(self):
         number_of_users = 1
@@ -52,31 +52,31 @@ class CreateStatusViewTest(TestCase):
                 password='123',
             )
 
-        number_of_statuses = 1
-        for status_num in range(number_of_statuses):
-            Status.objects.create(name=f'Status {status_num}')
+        number_of_label = 1
+        for label_num in range(number_of_label):
+            Label.objects.create(name=f'Label {label_num}')
 
     def test_redirect_if_not_logged_in(self):
-        response = self.client.get(reverse(CREATE_STATUS_URL_NAME))
+        response = self.client.get(reverse(CREATE_LABEL_URL_NAME))
         self.assertRedirects(response, reverse(LOGIN_URL_NAME))
 
     def test_logged_in_uses_correct_template(self):
         self.client.login(username='Username 0', password='123')
-        response = self.client.get(reverse(CREATE_STATUS_URL_NAME))
+        response = self.client.get(reverse(CREATE_LABEL_URL_NAME))
         self.assertEqual(str(response.context['user']), 'Username 0')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, FORM_HTML)
-
+        
     def test_create(self):
         self.client.login(username='Username 0', password='123')
-        response = self.client.post(reverse(CREATE_STATUS_URL_NAME), {'name': 'Creation test'})
+        response = self.client.post(reverse(CREATE_LABEL_URL_NAME), {'name': 'Creation test'})
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse(STATUSES_URL_NAME))
-        self.assertTrue(Status.objects.get(name='Creation test'))
+        self.assertRedirects(response, reverse(LABELS_URL_NAME))
+        self.assertTrue(Label.objects.get(name='Creation test'))
 
 
-class UpdateStatusViewTest(TestCase):
-
+class UpdateLabelViewTest(TestCase):
+    
     def setUp(self):
         number_of_users = 1
         for user_num in range(number_of_users):
@@ -87,18 +87,18 @@ class UpdateStatusViewTest(TestCase):
                 password='123',
             )
 
-        number_of_statuses = 1
-        for status_num in range(number_of_statuses):
-            Status.objects.create(name=f'Status {status_num}')
+        number_of_label = 1
+        for label_num in range(number_of_label):
+            Label.objects.create(name=f'Label {label_num}')
 
     def test_redirect_if_not_logged_in(self):
-        response = self.client.get(reverse(UPDATE_STATUS_URL_NAME, kwargs={'pk':1}))
+        response = self.client.get(reverse(UPDATE_LABEL_URL_NAME, kwargs={'pk':1}))
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith(reverse(LOGIN_URL_NAME)))
 
     def test_logged_in_uses_correct_template(self):
         self.client.login(username='Username 0', password='123')
-        response = self.client.get(reverse(UPDATE_STATUS_URL_NAME, kwargs={'pk':1}))
+        response = self.client.get(reverse(UPDATE_LABEL_URL_NAME, kwargs={'pk':1}))
         self.assertEqual(str(response.context['user']), 'Username 0')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, FORM_HTML)
@@ -107,15 +107,15 @@ class UpdateStatusViewTest(TestCase):
         new_name = 'Updation test'
         self.client.login(username='Username 0', password='123')
         response = self.client.post(
-            reverse(UPDATE_STATUS_URL_NAME, kwargs={'pk':1}),
+            reverse(UPDATE_LABEL_URL_NAME, kwargs={'pk':1}),
             {'name':new_name}
         )
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.url.startswith(reverse(STATUSES_URL_NAME)))
-        self.assertEqual(Status.objects.get(pk=1).name, new_name)
+        self.assertTrue(response.url.startswith(reverse(LABELS_URL_NAME)))
+        self.assertEqual(Label.objects.get(pk=1).name, new_name)
 
 
-class DeleteStatusViewTest(TestCase):
+class DeleteLabelViewTest(TestCase):
 
     def setUp(self):
         number_of_users = 1
@@ -127,25 +127,25 @@ class DeleteStatusViewTest(TestCase):
                 password='123',
             )
 
-        number_of_statuses = 2
-        for status_num in range(number_of_statuses):
-            Status.objects.create(name=f'Status {status_num}')
+        number_of_label = 2
+        for label_num in range(number_of_label):
+            Label.objects.create(name=f'Label {label_num}')
 
     def test_redirect_if_not_logged_in(self):
-        response = self.client.get(reverse(DELETE_STATUS_URL_NAME, kwargs={'pk':1}))
+        response = self.client.get(reverse(DELETE_LABEL_URL_NAME, kwargs={'pk':1}))
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith(reverse(LOGIN_URL_NAME)))
 
     def test_logged_in_uses_correct_template(self):
         self.client.login(username='Username 0', password='123')
-        response = self.client.get(reverse(DELETE_STATUS_URL_NAME, kwargs={'pk':1}))
+        response = self.client.get(reverse(DELETE_LABEL_URL_NAME, kwargs={'pk':1}))
         self.assertEqual(str(response.context['user']), 'Username 0')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, DELETE_HTML)
 
     def test_delete(self):
         self.client.login(username='Username 0', password='123')
-        response = self.client.post(reverse(DELETE_STATUS_URL_NAME, kwargs={'pk':1}))
+        response = self.client.post(reverse(DELETE_LABEL_URL_NAME, kwargs={'pk':1}))
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.url.startswith(reverse(STATUSES_URL_NAME)))
-        self.assertFalse(Status.objects.filter(pk=1))
+        self.assertTrue(response.url.startswith(reverse(LABELS_URL_NAME)))
+        self.assertFalse(Label.objects.filter(pk=1))

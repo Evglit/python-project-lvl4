@@ -70,7 +70,7 @@ class UpdateStatus(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 
     def handle_no_permission(self):
         messages.error(self.request, self.error_message)
-        return super(UpdateStatus, self).handle_no_permission()
+        return super().handle_no_permission()
 
 
 class DeleteStatus(LoginRequiredMixin, SuccessMessageMixin, DeleteView):

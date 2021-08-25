@@ -43,6 +43,7 @@ class TaskListViewTest(TestCase):
                 executer=User.objects.get(pk=2),
                 author=User.objects.get(pk=1)
             )
+            a.labels.add(Label.objects.get(pk=1))
 
     def test_redirect_if_not_logged_in(self):
         response = self.client.get(reverse(TASKS_URL_NAME ))
@@ -79,13 +80,14 @@ class TaskDetailViewTest(TestCase):
 
         number_of_tasks = 1
         for task_num in range(number_of_tasks):
-            Task.objects.create(
+            a = Task.objects.create(
                 name=f'Task {task_num}',
                 description=f'Task description {task_num}',
                 status=Status.objects.get(pk=1),
                 executer=User.objects.get(pk=2),
-                author=User.objects.get(pk=1),
+                author=User.objects.get(pk=1)
             )
+            a.labels.add(Label.objects.get(pk=1))
 
     def test_redirect_if_not_logged_in(self):
         response = self.client.get(reverse(TASKS_URL_NAME ))
@@ -121,13 +123,14 @@ class CreateTaskViewTest(TestCase):
         
         number_of_tasks = 2
         for task_num in range(number_of_tasks):
-            Task.objects.create(
+            a = Task.objects.create(
                 name=f'Task {task_num}',
                 description=f'Task description {task_num}',
                 status=Status.objects.get(pk=1),
                 executer=User.objects.get(pk=2),
-                author=User.objects.get(pk=1),
+                author=User.objects.get(pk=1)
             )
+            a.labels.add(Label.objects.get(pk=1))
     
     def test_redirect_if_not_logged_in(self):
         response = self.client.get(reverse(CREATE_TASK_URL_NAME))
@@ -147,13 +150,15 @@ class CreateTaskViewTest(TestCase):
                 {
                     'name': 'Task creation test',
                     'description': 'Task creation test',
-                    'status': '1',
-                    'executer': '2',
+                    'status': 1,
+                    'executer': 2,
+                    'labels': 1
                 }
         )
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse(TASKS_URL_NAME))
         self.assertTrue(Task.objects.get(name='Task creation test'))
+        response = self.client.get(reverse(TASKS_URL_NAME ))
         self.assertEqual(response.context['user'], Task.objects.get(name='Task creation test').author)
 
 
@@ -179,13 +184,14 @@ class UpdateTaskViewTest(TestCase):
         
         number_of_tasks = 1
         for task_num in range(number_of_tasks):
-            Task.objects.create(
+            a = Task.objects.create(
                 name=f'Task {task_num}',
                 description=f'Task description {task_num}',
                 status=Status.objects.get(pk=1),
                 executer=User.objects.get(pk=2),
-                author=User.objects.get(pk=1),
+                author=User.objects.get(pk=1)
             )
+            a.labels.add(Label.objects.get(pk=1))
     
     def test_redirect_if_not_logged_in(self):
         response = self.client.get(reverse(UPDATE_TASK_URL_NAME, kwargs={'pk':1}))
@@ -205,8 +211,9 @@ class UpdateTaskViewTest(TestCase):
                 {
                     'name': 'Task update test',
                     'description': 'Task update test',
-                    'status': '1',
-                    'executer': '2',
+                    'status': 1,
+                    'executer': 2,
+                    'labels': 1
                 }
         )
         self.assertEqual(response.status_code, 302)
@@ -236,13 +243,14 @@ class DeleteTaskViewTest(TestCase):
         
         number_of_tasks = 2
         for task_num in range(number_of_tasks):
-            Task.objects.create(
+            a = Task.objects.create(
                 name=f'Task {task_num}',
                 description=f'Task description {task_num}',
                 status=Status.objects.get(pk=1),
                 executer=User.objects.get(pk=2),
-                author=User.objects.get(pk=1),
+                author=User.objects.get(pk=1)
             )
+            a.labels.add(Label.objects.get(pk=1))
 
     def test_redirect_if_not_logged_in(self):
         response = self.client.get(reverse(DELETE_TASK_URL_NAME, kwargs={'pk':1}))

@@ -31,7 +31,9 @@
           <div class="col">
             <h6>{% translate "Метки:" %}</h6>
             <ul>
-                <li>{{ task.labels.name }}</li>
+                {% for label in task.labels.all %}
+                  <li>{{ label.name }}</li>
+                {% endfor %}
             </ul>
           </div>
         </div>
