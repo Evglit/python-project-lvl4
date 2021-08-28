@@ -5,6 +5,8 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django_filters.views import FilterView
+from task_manager.tasks.filters import TaskFilter
 from task_manager.users.views import LOGIN_URL_NAME, FORM_HTML, DELETE_HTML
 from .models import Task
 from .forms import TaskForm
@@ -131,3 +133,9 @@ class DeleteTask(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, D
     def handle_no_permission(self):
         messages.error(self.request, self.error_message)
         return redirect(self.login_url)
+
+
+class FilterTask(FilterView):
+    model = Task
+    filterset_class = TaskFilter
+    template_name = 'filter.html'
