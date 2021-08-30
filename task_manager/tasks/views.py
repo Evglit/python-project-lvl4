@@ -15,11 +15,11 @@ from .forms import TaskForm
 TASKS_URL_NAME = 'tasks'
 
 
-class TaskListPage(LoginRequiredMixin, ListView):
-    """Class for creating a task list page."""
+class TaskListPage(LoginRequiredMixin, FilterView):
+    """Class for creating a task list page with filter."""
     model = Task
+    filterset_class = TaskFilter
     template_name = 'tasks.html'
-    context_object_name = 'tasks'
     login_url = reverse_lazy(LOGIN_URL_NAME)
     error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
 
@@ -121,7 +121,7 @@ class DeleteTask(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, D
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, self.success_message)
         return super(DeleteTask, self).delete(request, *args, **kwargs)
-    
+
     def test_func(self):
         obj = self.get_object()
         if self.request.user.is_authenticated and obj.author.pk != self.request.user.pk:

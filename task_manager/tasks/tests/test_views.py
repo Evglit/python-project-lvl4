@@ -26,36 +26,53 @@ class TaskListViewTest(TestCase):
                 password='123',
             )
 
-        number_of_statuses = 1
+        number_of_statuses = 2
         for status_num in range(number_of_statuses):
             Status.objects.create(name=f'Status {status_num}')
 
-        number_of_labels = 1
+        number_of_labels = 2
         for labels_num in range(number_of_labels):
             Label.objects.create(name=f'Label {labels_num}')
 
         number_of_tasks = 5
         for task_num in range(number_of_tasks):
+            num1 = 1 if task_num < 3 else 2
+            num2 = 2 if task_num < 3 else 1
             a = Task.objects.create(
                 name=f'Task {task_num}',
                 description=f'Task description {task_num}',
-                status=Status.objects.get(pk=1),
-                executer=User.objects.get(pk=2),
-                author=User.objects.get(pk=1)
+                status=Status.objects.get(pk=num1),
+                executer=User.objects.get(pk=num2),
+                author=User.objects.get(pk=num1)
             )
-            a.labels.add(Label.objects.get(pk=1))
+            a.labels.add(Label.objects.get(pk=num1))
 
     def test_redirect_if_not_logged_in(self):
-        response = self.client.get(reverse(TASKS_URL_NAME ))
+        response = self.client.get(reverse(TASKS_URL_NAME))
         self.assertRedirects(response, reverse(LOGIN_URL_NAME))
 
     def test_logged_in_uses_correct_template(self):
         self.client.login(username='Username 0', password='123')
-        response = self.client.get(reverse(TASKS_URL_NAME ))
+        response = self.client.get(reverse(TASKS_URL_NAME))
         self.assertEqual(str(response.context['user']), 'Username 0')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'tasks.html')
-        self.assertTrue(len(response.context['tasks']) == 5)
+        self.assertTrue(len(response.context['filter'].qs) == 5)
+
+    def test_filter(self):
+        self.client.login(username='Username 0', password='123')
+        response = self.client.get(reverse(TASKS_URL_NAME), {'executer': 1})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['filter'].qs), 2)
+        response = self.client.get(reverse(TASKS_URL_NAME), {'self_tasks': 'on'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['filter'].qs), 3)
+        response = self.client.get(reverse(TASKS_URL_NAME), {'status': 1})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['filter'].qs), 3)
+        response = self.client.get(reverse(TASKS_URL_NAME), {'labels': 2})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['filter'].qs), 2)
 
 
 class TaskDetailViewTest(TestCase):
@@ -90,7 +107,7 @@ class TaskDetailViewTest(TestCase):
             a.labels.add(Label.objects.get(pk=1))
 
     def test_redirect_if_not_logged_in(self):
-        response = self.client.get(reverse(TASKS_URL_NAME ))
+        response = self.client.get(reverse(TASKS_URL_NAME))
         self.assertRedirects(response, reverse(LOGIN_URL_NAME))
 
     def test_logged_in_uses_correct_template(self):
