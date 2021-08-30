@@ -3,48 +3,51 @@
 {% load bootstrap4 %}
 
 {% block content %}
-<div class="card mb-3">
-  <div class="card-body bg-light">
-    <form class="form-inline center" method="get">
-      <div class="form-group">{{ filter.form.as_p }}</div>
-        <div class="form-group"><div class="mr-3"><div class="form-check"><input type="checkbox" name="self_tasks" class="form-check-input" id="id_self_tasks"><label class="form-check-label" for="id_self_tasks">Только свои задачи</label></div></div></div>
+
+  <div class="card mb-3">
+    <div class="card-body bg-light">
+      <form class="form-inline center" method="get">
+        {% bootstrap_field filter.form.status field_class='ml-2 mr-3' %}
+        {% bootstrap_field filter.form.executer field_class='ml-2 mr-3' %}
+        {% bootstrap_field filter.form.labels field_class='ml-2 mr-3' %}
+        {% bootstrap_field filter.form.self_tasks field_class='mr-3' %}
         <div class="form-group">
           <input class="btn btn-primary" type="submit" value="Показать">
         </div>
-    </form>
+      </form>
+    </div>
   </div>
-</div>
 
   <a class="nav-link" href="{% url 'create_task' %}"> {% translate "Создать задачу" %}</a>
   <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>{% translate "Имя" %}</th>
-          <th>{% translate "Статус" %}</th>
-          <th>{% translate "Автор" %}</th>
-          <th>{% translate "Исполнитель" %}</th>
-          <th>{% translate "Дата создания" %}</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>{% translate "Имя" %}</th>
+        <th>{% translate "Статус" %}</th>
+        <th>{% translate "Автор" %}</th>
+        <th>{% translate "Исполнитель" %}</th>
+        <th>{% translate "Дата создания" %}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
 
-        {% for task in filter.qs %}
-          <tr>
-            <td>{{ task.pk }}</td>
-            <td><a href="{% url 'task_detail' task.pk %}">{{ task.name }}</a></td>
-            <td>{{ task.status }}</td>
-            <td>{{ task.author }}</td>
-            <td>{{ task.executer }}</td>
-            <td>{{ task.time_create }}</td>
-            <td>
-              <a href="{% url 'update_task' task.pk %}">{% translate "Изменить" %}</a>
-              <br>
-              <a href="{% url 'delete_task' task.pk %}">{% translate "Удалить" %}</a>
-            </td>
-          </tr>
-        {% endfor %}
+      {% for task in filter.qs %}
+        <tr>
+          <td>{{ task.pk }}</td>
+          <td><a href="{% url 'task_detail' task.pk %}">{{ task.name }}</a></td>
+          <td>{{ task.status }}</td>
+          <td>{{ task.author }}</td>
+          <td>{{ task.executer }}</td>
+          <td>{{ task.time_create }}</td>
+          <td>
+            <a href="{% url 'update_task' task.pk %}">{% translate "Изменить" %}</a>
+            <br>
+            <a href="{% url 'delete_task' task.pk %}">{% translate "Удалить" %}</a>
+          </td>
+        </tr>
+      {% endfor %}
 
       </tbody>
   </table>
