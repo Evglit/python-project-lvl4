@@ -129,7 +129,8 @@ django_heroku.settings(locals())
 
 from dotenv import load_dotenv
 
-POST_SERVER_ITEM_ACCESS_TOKEN = load_dotenv('POST_SERVER_ITEM_ACCESS_TOKEN')
+load_dotenv()
+POST_SERVER_ITEM_ACCESS_TOKEN = os.getenv('POST_SERVER_ITEM_ACCESS_TOKEN')
 
 ROLLBAR = {
     'access_token': POST_SERVER_ITEM_ACCESS_TOKEN,
