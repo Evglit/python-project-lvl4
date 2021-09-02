@@ -132,7 +132,7 @@ from dotenv import load_dotenv
 POST_SERVER_ITEM_ACCESS_TOKEN = load_dotenv('POST_SERVER_ITEM_ACCESS_TOKEN')
 
 ROLLBAR = {
-    'access_token': str(POST_SERVER_ITEM_ACCESS_TOKEN),
+    'access_token': POST_SERVER_ITEM_ACCESS_TOKEN,
     'environment': 'development' if DEBUG else 'production',
     'root': BASE_DIR,
 }
