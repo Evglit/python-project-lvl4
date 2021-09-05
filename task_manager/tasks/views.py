@@ -88,7 +88,7 @@ class UpdateTask(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     template_name = FORM_HTML
     success_url = reverse_lazy(TASKS_URL_NAME)
     login_url = reverse_lazy(LOGIN_URL_NAME)
-    success_massage = 'Задача успешно изменена'
+    success_message = 'Задача успешно изменена'
     error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
 
     def get_context_data(self, **kwargs):
