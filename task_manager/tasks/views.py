@@ -136,9 +136,3 @@ class DeleteTask(
     def handle_no_permission(self):
         messages.error(self.request, self.error_message)
         return redirect(self.login_url)
-
-
-class FilterTask(FilterView):
-    model = Task
-    filterset_class = TaskFilter
-    template_name = 'filter.html'
