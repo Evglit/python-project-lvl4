@@ -82,7 +82,9 @@ class LogoutUser(SuccessMessageMixin, LogoutView):
         return response
 
 
-class UbdateUser(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
+class UbdateUser(
+    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView
+):
     """User update class."""
     model = User
     form_class = UserForm
@@ -92,7 +94,7 @@ class UbdateUser(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, U
     login_url = reverse_lazy(LOGIN_URL_NAME)
     success_message = 'Пользователь успешно изменён'
     error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Изменение пользователя'
@@ -101,8 +103,11 @@ class UbdateUser(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, U
 
     def test_func(self):
         obj = self.get_object()
-        if self.request.user.is_authenticated and obj.pk != self.request.user.pk:
-            self.error_message = 'У вас нет прав для изменения другого пользователя.'
+        if self.request.user.is_authenticated and \
+                obj.pk != self.request.user.pk:
+            self.error_message = (
+                'У вас нет прав для изменения другого пользователя.'
+            )
             self.login_url = reverse_lazy(USERS_URL_NAME)
             return False
         return True
@@ -112,7 +117,9 @@ class UbdateUser(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, U
         return redirect(self.login_url)
 
 
-class DeleteUser(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
+class DeleteUser(
+    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView
+):
     """User delete class."""
     model = User
     template_name = 'delete.html'
@@ -131,16 +138,23 @@ class DeleteUser(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, D
         return context
 
     def delete(self, request, *args, **kwargs):
-        if Task.objects.filter(author=self.request.user.pk) or Task.objects.filter(executer=self.request.user.pk):
-            messages.error(self.request, 'Невозможно удалить пользователя, потому что он используется')
+        if Task.objects.filter(author=self.request.user.pk) \
+                or Task.objects.filter(executer=self.request.user.pk):
+            messages.error(
+                self.request,
+                'Невозможно удалить пользователя, потому что он используется'
+            )
             return redirect(reverse_lazy(USERS_URL_NAME))
         messages.success(self.request, self.success_message)
         return super().delete(request, *args, **kwargs)
 
     def test_func(self):
         obj = self.get_object()
-        if self.request.user.is_authenticated and obj.pk != self.request.user.pk:
-            self.error_message = 'У вас нет прав для изменения другого пользователя.'
+        if self.request.user.is_authenticated and \
+                obj.pk != self.request.user.pk:
+            self.error_message = (
+                'У вас нет прав для изменения другого пользователя.'
+            )
             self.login_url = reverse_lazy(USERS_URL_NAME)
             return False
         return True

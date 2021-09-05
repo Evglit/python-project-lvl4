@@ -5,7 +5,11 @@ from django.forms.widgets import CheckboxInput
 
 
 class TaskFilter(django_filters.FilterSet):
-    self_tasks = django_filters.BooleanFilter(label='Только свои задачи', method='my_tasks', widget=CheckboxInput)
+    self_tasks = django_filters.BooleanFilter(
+        label='Только свои задачи',
+        method='my_tasks',
+        widget=CheckboxInput
+    )
     labels = django_filters.ModelChoiceFilter(queryset=Label.objects.all())
 
     class Meta:

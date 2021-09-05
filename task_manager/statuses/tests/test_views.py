@@ -69,7 +69,10 @@ class CreateStatusViewTest(TestCase):
 
     def test_create(self):
         self.client.login(username='Username 0', password='123')
-        response = self.client.post(reverse(CREATE_STATUS_URL_NAME), {'name': 'Creation test'})
+        response = self.client.post(
+            reverse(CREATE_STATUS_URL_NAME),
+            {'name': 'Creation test'}
+        )
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse(STATUSES_URL_NAME))
         self.assertTrue(Status.objects.get(name='Creation test'))
@@ -92,13 +95,17 @@ class UpdateStatusViewTest(TestCase):
             Status.objects.create(name=f'Status {status_num}')
 
     def test_redirect_if_not_logged_in(self):
-        response = self.client.get(reverse(UPDATE_STATUS_URL_NAME, kwargs={'pk':1}))
+        response = self.client.get(
+            reverse(UPDATE_STATUS_URL_NAME, kwargs={'pk': 1})
+        )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith(reverse(LOGIN_URL_NAME)))
 
     def test_logged_in_uses_correct_template(self):
         self.client.login(username='Username 0', password='123')
-        response = self.client.get(reverse(UPDATE_STATUS_URL_NAME, kwargs={'pk':1}))
+        response = self.client.get(
+            reverse(UPDATE_STATUS_URL_NAME, kwargs={'pk': 1})
+        )
         self.assertEqual(str(response.context['user']), 'Username 0')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, FORM_HTML)
@@ -107,8 +114,8 @@ class UpdateStatusViewTest(TestCase):
         new_name = 'Updation test'
         self.client.login(username='Username 0', password='123')
         response = self.client.post(
-            reverse(UPDATE_STATUS_URL_NAME, kwargs={'pk':1}),
-            {'name':new_name}
+            reverse(UPDATE_STATUS_URL_NAME, kwargs={'pk': 1}),
+            {'name': new_name}
         )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith(reverse(STATUSES_URL_NAME)))
@@ -132,20 +139,26 @@ class DeleteStatusViewTest(TestCase):
             Status.objects.create(name=f'Status {status_num}')
 
     def test_redirect_if_not_logged_in(self):
-        response = self.client.get(reverse(DELETE_STATUS_URL_NAME, kwargs={'pk':1}))
+        response = self.client.get(
+            reverse(DELETE_STATUS_URL_NAME, kwargs={'pk': 1})
+        )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith(reverse(LOGIN_URL_NAME)))
 
     def test_logged_in_uses_correct_template(self):
         self.client.login(username='Username 0', password='123')
-        response = self.client.get(reverse(DELETE_STATUS_URL_NAME, kwargs={'pk':1}))
+        response = self.client.get(reverse(
+            DELETE_STATUS_URL_NAME, kwargs={'pk': 1})
+        )
         self.assertEqual(str(response.context['user']), 'Username 0')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, DELETE_HTML)
 
     def test_delete(self):
         self.client.login(username='Username 0', password='123')
-        response = self.client.post(reverse(DELETE_STATUS_URL_NAME, kwargs={'pk':1}))
+        response = self.client.post(
+            reverse(DELETE_STATUS_URL_NAME, kwargs={'pk': 1})
+        )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith(reverse(STATUSES_URL_NAME)))
         self.assertFalse(Status.objects.filter(pk=1))

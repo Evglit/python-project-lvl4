@@ -3,7 +3,11 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.HomePage.as_view(), name='home'),
+    path(
+        '',
+        views.HomePage.as_view(),
+        name='home'
+    ),
     path(
         'users/',
         views.UserListPage.as_view(),
@@ -32,5 +36,5 @@ urlpatterns = [
     path(
         'users/<int:pk>/delete/',
         views.DeleteUser.as_view(),
-        name='delete_user'),  
+        name='delete_user'),
 ]

@@ -46,7 +46,7 @@ class CreateStatus(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         context['title'] = 'Создать статус'
         context['command'] = 'Создать'
         return context
-    
+
     def handle_no_permission(self):
         messages.error(self.request, self.error_message)
         return redirect(self.login_url)
@@ -92,7 +92,10 @@ class DeleteStatus(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         obj = self.get_object()
         if Task.objects.filter(status=obj.pk):
-            messages.error(self.request, 'Невозможно удалить статус, потому что он используется')
+            messages.error(
+                self.request,
+                'Невозможно удалить статус, потому что он используется'
+            )
             return redirect(reverse_lazy(STATUSES_URL_NAME))
         messages.success(self.request, self.success_message)
         return super(DeleteStatus, self).delete(request, *args, **kwargs)

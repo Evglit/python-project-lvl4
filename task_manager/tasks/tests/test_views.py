@@ -64,7 +64,10 @@ class TaskListViewTest(TestCase):
         response = self.client.get(reverse(TASKS_URL_NAME), {'executer': 1})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['filter'].qs), 2)
-        response = self.client.get(reverse(TASKS_URL_NAME), {'self_tasks': 'on'})
+        response = self.client.get(
+            reverse(TASKS_URL_NAME),
+            {'self_tasks': 'on'}
+        )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['filter'].qs), 3)
         response = self.client.get(reverse(TASKS_URL_NAME), {'status': 1})
@@ -112,7 +115,9 @@ class TaskDetailViewTest(TestCase):
 
     def test_logged_in_uses_correct_template(self):
         self.client.login(username='Username 0', password='123')
-        response = self.client.get(reverse(TAKS_DETAIL_URL_NAME, kwargs={'pk':1}))
+        response = self.client.get(
+            reverse(TAKS_DETAIL_URL_NAME, kwargs={'pk': 1})
+        )
         self.assertEqual(str(response.context['user']), 'Username 0')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'task_detail.html')
@@ -137,7 +142,7 @@ class CreateTaskViewTest(TestCase):
         number_of_labels = 1
         for labels_num in range(number_of_labels):
             Label.objects.create(name=f'Label {labels_num}')
-        
+
         number_of_tasks = 2
         for task_num in range(number_of_tasks):
             a = Task.objects.create(
@@ -148,7 +153,7 @@ class CreateTaskViewTest(TestCase):
                 author=User.objects.get(pk=1)
             )
             a.labels.add(Label.objects.get(pk=1))
-    
+
     def test_redirect_if_not_logged_in(self):
         response = self.client.get(reverse(CREATE_TASK_URL_NAME))
         self.assertRedirects(response, reverse(LOGIN_URL_NAME))
@@ -164,19 +169,22 @@ class CreateTaskViewTest(TestCase):
         self.client.login(username='Username 0', password='123')
         response = self.client.post(
             reverse(CREATE_TASK_URL_NAME),
-                {
-                    'name': 'Task creation test',
-                    'description': 'Task creation test',
-                    'status': 1,
-                    'executer': 2,
-                    'labels': 1
-                }
+            {
+                'name': 'Task creation test',
+                'description': 'Task creation test',
+                'status': 1,
+                'executer': 2,
+                'labels': 1
+            }
         )
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse(TASKS_URL_NAME))
         self.assertTrue(Task.objects.get(name='Task creation test'))
-        response = self.client.get(reverse(TASKS_URL_NAME ))
-        self.assertEqual(response.context['user'], Task.objects.get(name='Task creation test').author)
+        response = self.client.get(reverse(TASKS_URL_NAME))
+        self.assertEqual(
+            response.context['user'],
+            Task.objects.get(name='Task creation test').author
+        )
 
 
 class UpdateTaskViewTest(TestCase):
@@ -198,7 +206,7 @@ class UpdateTaskViewTest(TestCase):
         number_of_labels = 1
         for labels_num in range(number_of_labels):
             Label.objects.create(name=f'Label {labels_num}')
-        
+
         number_of_tasks = 1
         for task_num in range(number_of_tasks):
             a = Task.objects.create(
@@ -209,14 +217,18 @@ class UpdateTaskViewTest(TestCase):
                 author=User.objects.get(pk=1)
             )
             a.labels.add(Label.objects.get(pk=1))
-    
+
     def test_redirect_if_not_logged_in(self):
-        response = self.client.get(reverse(UPDATE_TASK_URL_NAME, kwargs={'pk':1}))
+        response = self.client.get(
+            reverse(UPDATE_TASK_URL_NAME, kwargs={'pk': 1})
+        )
         self.assertRedirects(response, reverse(LOGIN_URL_NAME))
 
     def test_logged_in_uses_correct_template(self):
         self.client.login(username='Username 0', password='123')
-        response = self.client.get(reverse(UPDATE_TASK_URL_NAME, kwargs={'pk':1}))
+        response = self.client.get(
+            reverse(UPDATE_TASK_URL_NAME, kwargs={'pk': 1})
+        )
         self.assertEqual(str(response.context['user']), 'Username 0')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, FORM_HTML)
@@ -224,14 +236,14 @@ class UpdateTaskViewTest(TestCase):
     def test_update(self):
         self.client.login(username='Username 0', password='123')
         response = self.client.post(
-            reverse(UPDATE_TASK_URL_NAME, kwargs={'pk':1}),
-                {
-                    'name': 'Task update test',
-                    'description': 'Task update test',
-                    'status': 1,
-                    'executer': 2,
-                    'labels': 1
-                }
+            reverse(UPDATE_TASK_URL_NAME, kwargs={'pk': 1}),
+            {
+                'name': 'Task update test',
+                'description': 'Task update test',
+                'status': 1,
+                'executer': 2,
+                'labels': 1
+            }
         )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith(reverse(TASKS_URL_NAME)))
@@ -257,7 +269,7 @@ class DeleteTaskViewTest(TestCase):
         number_of_labels = 1
         for labels_num in range(number_of_labels):
             Label.objects.create(name=f'Label {labels_num}')
-        
+
         number_of_tasks = 2
         for task_num in range(number_of_tasks):
             a = Task.objects.create(
@@ -270,26 +282,34 @@ class DeleteTaskViewTest(TestCase):
             a.labels.add(Label.objects.get(pk=1))
 
     def test_redirect_if_not_logged_in(self):
-        response = self.client.get(reverse(DELETE_TASK_URL_NAME, kwargs={'pk':1}))
+        response = self.client.get(
+            reverse(DELETE_TASK_URL_NAME, kwargs={'pk': 1})
+        )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith(reverse(LOGIN_URL_NAME)))
 
     def test_redirect_if_logged_in_but_not_passed_test(self):
         self.client.login(username='Username 1', password='123')
-        response = self.client.get(reverse(DELETE_TASK_URL_NAME, kwargs={'pk':1}))
+        response = self.client.get(
+            reverse(DELETE_TASK_URL_NAME, kwargs={'pk': 1})
+        )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith(reverse(TASKS_URL_NAME)))
 
     def test_logged_in_passed_test_uses_correct_template(self):
         self.client.login(username='Username 0', password='123')
-        response = self.client.get(reverse(DELETE_TASK_URL_NAME, kwargs={'pk':1}))
+        response = self.client.get(
+            reverse(DELETE_TASK_URL_NAME, kwargs={'pk': 1})
+        )
         self.assertEqual(str(response.context['user']), 'Username 0')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, DELETE_HTML)
 
     def test_delete(self):
         self.client.login(username='Username 0', password='123')
-        response = self.client.post(reverse(DELETE_TASK_URL_NAME, kwargs={'pk':1}))
+        response = self.client.post(
+            reverse(DELETE_TASK_URL_NAME, kwargs={'pk': 1})
+        )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith(reverse(TASKS_URL_NAME)))
         self.assertFalse(Task.objects.filter(pk=1))

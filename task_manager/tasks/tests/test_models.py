@@ -20,7 +20,7 @@ class TaskModelTest(TestCase):
         number_of_statuses = 1
         for status_num in range(number_of_statuses):
             Status.objects.create(name=f'Status {status_num}')
-        
+
         number_of_tasks = 1
         for task_num in range(number_of_tasks):
             Task.objects.create(

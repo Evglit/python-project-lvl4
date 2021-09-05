@@ -1,7 +1,7 @@
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from django.contrib import messages
-from django.views.generic import ListView, DetailView
+from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -102,7 +102,9 @@ class UpdateTask(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return redirect(self.login_url)
 
 
-class DeleteTask(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
+class DeleteTask(
+    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView
+):
     "Task delete class"
     model = Task
     template_name = DELETE_HTML
@@ -124,7 +126,8 @@ class DeleteTask(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, D
 
     def test_func(self):
         obj = self.get_object()
-        if self.request.user.is_authenticated and obj.author.pk != self.request.user.pk:
+        if self.request.user.is_authenticated and \
+                obj.author.pk != self.request.user.pk:
             self.error_message = 'Задачу может удалить только её автор'
             self.login_url = reverse_lazy(TASKS_URL_NAME)
             return False

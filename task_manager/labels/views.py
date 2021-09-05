@@ -92,7 +92,10 @@ class DeleteLabel(LoginRequiredMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         obj = self.get_object()
         if Task.objects.filter(labels=obj.pk):
-            messages.error(self.request, 'Невозможно удалить статус, потому что он используется')
+            messages.error(
+                self.request,
+                'Невозможно удалить статус, потому что он используется'
+            )
             return redirect(reverse_lazy(LABELS_URL_NAME))
         messages.success(request, self.success_message)
         return super().delete(request, *args, **kwargs)
