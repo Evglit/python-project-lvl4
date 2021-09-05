@@ -7,4 +7,10 @@
 ## Description
 The <b>task management</b> system that allows you to set tasks, assign performers and change their statuses. Registration and authentication are required to work with the system.<br>
 
-The project is deployed to Heroku: [https://task-mg.herokuapp.com](https://task-mg.herokuapp.com)
+The project is deployed to Heroku: [https://task-mg.herokuapp.com](https://task-mg.herokuapp.com)<br>
+
+Пароль у всех пользователей: '''123'''<br>
+
+Пример входа:
+Имя пользователя: '''Тироион'''
+Пароль: '''123'''
