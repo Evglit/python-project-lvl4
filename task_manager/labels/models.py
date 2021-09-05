@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Label(models.Model):
-    name = models.CharField(max_length=100, verbose_name='Имя', null=True)
+    name = models.CharField(max_length=100, verbose_name='Имя')
     time_create = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

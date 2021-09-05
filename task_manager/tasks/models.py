@@ -6,7 +6,10 @@ from task_manager.labels.models import Label
 
 class Task(models.Model):
     name = models.CharField(max_length=100, verbose_name='Имя')
-    description = models.TextField(verbose_name='Описание')
+    description = models.TextField(
+        verbose_name='Описание',
+        blank=True
+    )
     status = models.ForeignKey(
         Status,
         on_delete=models.PROTECT,
@@ -22,7 +25,11 @@ class Task(models.Model):
         verbose_name='Автор',
         related_name='author'
     )
-    labels = models.ManyToManyField(Label, verbose_name='Метки')
+    labels = models.ManyToManyField(
+        Label,
+        verbose_name='Метки',
+        blank=True
+    )
     time_create = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
