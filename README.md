@@ -9,8 +9,8 @@ The <b>task management</b> system that allows you to set tasks, assign performer
 
 The project is deployed to Heroku: [https://task-mg.herokuapp.com](https://task-mg.herokuapp.com)<br>
 
-Пароль у всех пользователей: `123`<br>
+Password for all users: `123`<br>
 
-Пример входа:<br>
-Имя пользователя: `Тироион`<br>
-Пароль: `123`
+Login example:<br>
+Username: `Тирион`<br>
+Password: `123`
