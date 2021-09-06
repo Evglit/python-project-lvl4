@@ -60,7 +60,7 @@ class CreateTask(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = FORM_HTML
     success_url = reverse_lazy(TASKS_URL_NAME)
     login_url = reverse_lazy(LOGIN_URL_NAME)
-    success_message = 'Статус успешно создан'
+    success_message = 'Задача успешно создана'
     error_message = 'Вы не авторизованы! Пожалуйста, выполните вход.'
 
     def post(self, *args, **kwargs):
