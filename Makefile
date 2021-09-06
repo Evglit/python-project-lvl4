@@ -5,7 +5,7 @@ test:
 	poetry run pytest page_loader tests
 
 test-coverage:
-	poetry run pytest --cov=page_loader --cov-report xml tests
+	poetry run pytest --cov=task_manager --cov-report xml tests
 
 lint:
 	poetry run flake8 task_manager
