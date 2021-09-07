@@ -34,7 +34,10 @@ class TestListLabelView(TestCase):
     def test_logged_in_uses_correct_template(self):
         self.client.login(username='Username 0', password='123')
         response = self.client.get(reverse(LABELS_URL_NAME))
-        self.assertEqual(str(response.context['user']), 'Username 0')
+        self.assertEqual(
+            str(response.context['user']),
+            'First name 0 Last name 0'
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'labels.html')
         self.assertTrue(len(response.context[LABELS_URL_NAME]) == 5)
@@ -63,7 +66,10 @@ class CreateLabelViewTest(TestCase):
     def test_logged_in_uses_correct_template(self):
         self.client.login(username='Username 0', password='123')
         response = self.client.get(reverse(CREATE_LABEL_URL_NAME))
-        self.assertEqual(str(response.context['user']), 'Username 0')
+        self.assertEqual(
+            str(response.context['user']),
+            'First name 0 Last name 0'
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, FORM_HTML)
 
@@ -106,7 +112,10 @@ class UpdateLabelViewTest(TestCase):
         response = self.client.get(
             reverse(UPDATE_LABEL_URL_NAME, kwargs={'pk': 1})
         )
-        self.assertEqual(str(response.context['user']), 'Username 0')
+        self.assertEqual(
+            str(response.context['user']),
+            'First name 0 Last name 0'
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, FORM_HTML)
 
@@ -152,7 +161,7 @@ class DeleteLabelViewTest(TestCase):
         )
         self.assertEqual(
             str(response.context['user']),
-            'Username 0'
+            'First name 0 Last name 0'
         )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, DELETE_HTML)

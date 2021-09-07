@@ -54,7 +54,10 @@ class TaskListViewTest(TestCase):
     def test_logged_in_uses_correct_template(self):
         self.client.login(username='Username 0', password='123')
         response = self.client.get(reverse(TASKS_URL_NAME))
-        self.assertEqual(str(response.context['user']), 'Username 0')
+        self.assertEqual(
+            str(response.context['user']),
+            'First name 0 Last name 0'
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'tasks.html')
         self.assertTrue(len(response.context['filter'].qs) == 5)
@@ -118,7 +121,10 @@ class TaskDetailViewTest(TestCase):
         response = self.client.get(
             reverse(TAKS_DETAIL_URL_NAME, kwargs={'pk': 1})
         )
-        self.assertEqual(str(response.context['user']), 'Username 0')
+        self.assertEqual(
+            str(response.context['user']),
+            'First name 0 Last name 0'
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'task_detail.html')
 
@@ -161,7 +167,10 @@ class CreateTaskViewTest(TestCase):
     def test_logged_in_uses_correct_template(self):
         self.client.login(username='Username 0', password='123')
         response = self.client.get(reverse(CREATE_TASK_URL_NAME))
-        self.assertEqual(str(response.context['user']), 'Username 0')
+        self.assertEqual(
+            str(response.context['user']),
+            'First name 0 Last name 0'
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, FORM_HTML)
 
@@ -229,7 +238,10 @@ class UpdateTaskViewTest(TestCase):
         response = self.client.get(
             reverse(UPDATE_TASK_URL_NAME, kwargs={'pk': 1})
         )
-        self.assertEqual(str(response.context['user']), 'Username 0')
+        self.assertEqual(
+            str(response.context['user']),
+            'First name 0 Last name 0'
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, FORM_HTML)
 
@@ -301,7 +313,10 @@ class DeleteTaskViewTest(TestCase):
         response = self.client.get(
             reverse(DELETE_TASK_URL_NAME, kwargs={'pk': 1})
         )
-        self.assertEqual(str(response.context['user']), 'Username 0')
+        self.assertEqual(
+            str(response.context['user']),
+            'First name 0 Last name 0'
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, DELETE_HTML)
 

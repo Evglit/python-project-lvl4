@@ -34,7 +34,10 @@ class StatusListViewTest(TestCase):
     def test_logged_in_uses_correct_template(self):
         self.client.login(username='Username 0', password='123')
         response = self.client.get(reverse(STATUSES_URL_NAME))
-        self.assertEqual(str(response.context['user']), 'Username 0')
+        self.assertEqual(
+            str(response.context['user']),
+            'First name 0 Last name 0'
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'statuses.html')
         self.assertTrue(len(response.context[STATUSES_URL_NAME]) == 5)
@@ -63,7 +66,10 @@ class CreateStatusViewTest(TestCase):
     def test_logged_in_uses_correct_template(self):
         self.client.login(username='Username 0', password='123')
         response = self.client.get(reverse(CREATE_STATUS_URL_NAME))
-        self.assertEqual(str(response.context['user']), 'Username 0')
+        self.assertEqual(
+            str(response.context['user']),
+            'First name 0 Last name 0'
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, FORM_HTML)
 
@@ -106,7 +112,10 @@ class UpdateStatusViewTest(TestCase):
         response = self.client.get(
             reverse(UPDATE_STATUS_URL_NAME, kwargs={'pk': 1})
         )
-        self.assertEqual(str(response.context['user']), 'Username 0')
+        self.assertEqual(
+            str(response.context['user']),
+            'First name 0 Last name 0'
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, FORM_HTML)
 
@@ -150,7 +159,10 @@ class DeleteStatusViewTest(TestCase):
         response = self.client.get(reverse(
             DELETE_STATUS_URL_NAME, kwargs={'pk': 1})
         )
-        self.assertEqual(str(response.context['user']), 'Username 0')
+        self.assertEqual(
+            str(response.context['user']),
+            'First name 0 Last name 0'
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, DELETE_HTML)
 
