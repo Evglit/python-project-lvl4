@@ -1,6 +1,6 @@
 from django.db import models
 from task_manager.statuses.models import Status
-from django.contrib.auth.models import User
+from task_manager.users.models import CustomUser
 from task_manager.labels.models import Label
 
 
@@ -16,13 +16,13 @@ class Task(models.Model):
         verbose_name='Статус',
     )
     executer = models.ForeignKey(
-        User,
+        CustomUser,
         on_delete=models.PROTECT,
         verbose_name='Исполнитель',
         related_name='executer'
     )
     author = models.ForeignKey(
-        User,
+        CustomUser,
         on_delete=models.PROTECT,
         verbose_name='Автор',
         related_name='author'

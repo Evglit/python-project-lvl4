@@ -15,7 +15,6 @@ import django_heroku
 from pathlib import Path
 from dotenv import load_dotenv
 import rollbar
-import dj_database_url
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -144,3 +143,5 @@ ROLLBAR = {
 }
 
 rollbar.init(**ROLLBAR)
+
+AUTH_USER_MODEL = 'users.CustomUser'

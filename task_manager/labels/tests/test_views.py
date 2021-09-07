@@ -1,6 +1,6 @@
 from django.urls import reverse
 from django.test import TestCase
-from django.contrib.auth.models import User
+from task_manager.users.models import CustomUser
 from task_manager.labels.models import Label
 from task_manager.users.views import LOGIN_URL_NAME, FORM_HTML, DELETE_HTML
 from task_manager.labels.views import LABELS_URL_NAME
@@ -16,7 +16,7 @@ class TestListLabelView(TestCase):
     def setUp(self):
         number_of_users = 1
         for user_num in range(number_of_users):
-            User.objects.create_user(
+            CustomUser.objects.create_user(
                 first_name=f'First name {user_num}',
                 last_name=f'Last name {user_num}',
                 username=f'Username {user_num}',
@@ -45,7 +45,7 @@ class CreateLabelViewTest(TestCase):
     def setUp(self):
         number_of_users = 1
         for user_num in range(number_of_users):
-            User.objects.create_user(
+            CustomUser.objects.create_user(
                 first_name=f'First name {user_num}',
                 last_name=f'Last name {user_num}',
                 username=f'Username {user_num}',
@@ -83,7 +83,7 @@ class UpdateLabelViewTest(TestCase):
     def setUp(self):
         number_of_users = 1
         for user_num in range(number_of_users):
-            User.objects.create_user(
+            CustomUser.objects.create_user(
                 first_name=f'First name {user_num}',
                 last_name=f'Last name {user_num}',
                 username=f'Username {user_num}',
@@ -127,7 +127,7 @@ class DeleteLabelViewTest(TestCase):
     def setUp(self):
         number_of_users = 1
         for user_num in range(number_of_users):
-            User.objects.create_user(
+            CustomUser.objects.create_user(
                 first_name=f'First name {user_num}',
                 last_name=f'Last name {user_num}',
                 username=f'Username {user_num}',

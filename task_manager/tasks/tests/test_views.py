@@ -1,6 +1,6 @@
 from django.urls import reverse
 from django.test import TestCase
-from django.contrib.auth.models import User
+from task_manager.users.models import CustomUser
 from task_manager.tasks.models import Task
 from task_manager.statuses.models import Status
 from task_manager.labels.models import Label
@@ -19,7 +19,7 @@ class TaskListViewTest(TestCase):
     def setUp(self):
         number_of_users = 2
         for user_num in range(number_of_users):
-            User.objects.create_user(
+            CustomUser.objects.create_user(
                 first_name=f'First name {user_num}',
                 last_name=f'Last name {user_num}',
                 username=f'Username {user_num}',
@@ -42,8 +42,8 @@ class TaskListViewTest(TestCase):
                 name=f'Task {task_num}',
                 description=f'Task description {task_num}',
                 status=Status.objects.get(pk=num1),
-                executer=User.objects.get(pk=num2),
-                author=User.objects.get(pk=num1)
+                executer=CustomUser.objects.get(pk=num2),
+                author=CustomUser.objects.get(pk=num1)
             )
             a.labels.add(Label.objects.get(pk=num1))
 
@@ -83,7 +83,7 @@ class TaskDetailViewTest(TestCase):
     def setUp(self):
         number_of_users = 2
         for user_num in range(number_of_users):
-            User.objects.create_user(
+            CustomUser.objects.create_user(
                 first_name=f'First name {user_num}',
                 last_name=f'Last name {user_num}',
                 username=f'Username {user_num}',
@@ -104,8 +104,8 @@ class TaskDetailViewTest(TestCase):
                 name=f'Task {task_num}',
                 description=f'Task description {task_num}',
                 status=Status.objects.get(pk=1),
-                executer=User.objects.get(pk=2),
-                author=User.objects.get(pk=1)
+                executer=CustomUser.objects.get(pk=2),
+                author=CustomUser.objects.get(pk=1)
             )
             a.labels.add(Label.objects.get(pk=1))
 
@@ -128,7 +128,7 @@ class CreateTaskViewTest(TestCase):
     def setUp(self):
         number_of_users = 2
         for user_num in range(number_of_users):
-            User.objects.create_user(
+            CustomUser.objects.create_user(
                 first_name=f'First name {user_num}',
                 last_name=f'Last name {user_num}',
                 username=f'Username {user_num}',
@@ -149,8 +149,8 @@ class CreateTaskViewTest(TestCase):
                 name=f'Task {task_num}',
                 description=f'Task description {task_num}',
                 status=Status.objects.get(pk=1),
-                executer=User.objects.get(pk=2),
-                author=User.objects.get(pk=1)
+                executer=CustomUser.objects.get(pk=2),
+                author=CustomUser.objects.get(pk=1)
             )
             a.labels.add(Label.objects.get(pk=1))
 
@@ -192,7 +192,7 @@ class UpdateTaskViewTest(TestCase):
     def setUp(self):
         number_of_users = 2
         for user_num in range(number_of_users):
-            User.objects.create_user(
+            CustomUser.objects.create_user(
                 first_name=f'First name {user_num}',
                 last_name=f'Last name {user_num}',
                 username=f'Username {user_num}',
@@ -213,8 +213,8 @@ class UpdateTaskViewTest(TestCase):
                 name=f'Task {task_num}',
                 description=f'Task description {task_num}',
                 status=Status.objects.get(pk=1),
-                executer=User.objects.get(pk=2),
-                author=User.objects.get(pk=1)
+                executer=CustomUser.objects.get(pk=2),
+                author=CustomUser.objects.get(pk=1)
             )
             a.labels.add(Label.objects.get(pk=1))
 
@@ -255,7 +255,7 @@ class DeleteTaskViewTest(TestCase):
     def setUp(self):
         number_of_users = 3
         for user_num in range(number_of_users):
-            User.objects.create_user(
+            CustomUser.objects.create_user(
                 first_name=f'First name {user_num}',
                 last_name=f'Last name {user_num}',
                 username=f'Username {user_num}',
@@ -276,8 +276,8 @@ class DeleteTaskViewTest(TestCase):
                 name=f'Task {task_num}',
                 description=f'Task description {task_num}',
                 status=Status.objects.get(pk=1),
-                executer=User.objects.get(pk=2),
-                author=User.objects.get(pk=1)
+                executer=CustomUser.objects.get(pk=2),
+                author=CustomUser.objects.get(pk=1)
             )
             a.labels.add(Label.objects.get(pk=1))
 

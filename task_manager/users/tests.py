@@ -1,6 +1,6 @@
 from django.urls import reverse
 from django.test import TestCase
-from django.contrib.auth.models import User
+from task_manager.users.models import CustomUser
 from .views import (
     FORM_HTML, USERS_URL_NAME, HOME_URL_NAME, LOGIN_URL_NAME
 )
@@ -26,7 +26,7 @@ class UserListViewTest(TestCase):
     def setUpTestData(cla):
         number_of_users = 5
         for user_num in range(number_of_users):
-            User.objects.create_user(
+            CustomUser.objects.create_user(
                 first_name=f'First name {user_num}',
                 last_name=f'Last name {user_num}',
                 username=f'Username {user_num}',
@@ -49,7 +49,7 @@ class LoginLogoutViewTest(TestCase):
     def setUp(self):
         number_of_users = 1
         for user_num in range(number_of_users):
-            User.objects.create_user(
+            CustomUser.objects.create_user(
                 first_name=f'First name {user_num}',
                 last_name=f'Last name {user_num}',
                 username=f'Username {user_num}',
@@ -85,7 +85,7 @@ class CreateUserViewTest(TestCase):
     def setUp(self):
         number_of_users = 1
         for user_num in range(number_of_users):
-            User.objects.create_user(
+            CustomUser.objects.create_user(
                 first_name=f'First name {user_num}',
                 last_name=f'Last name {user_num}',
                 username=f'Username {user_num}',
@@ -110,7 +110,7 @@ class CreateUserViewTest(TestCase):
         )
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse(LOGIN_URL_NAME))
-        self.assertTrue(User.objects.get(username='test_create'))
+        self.assertTrue(CustomUser.objects.get(username='test_create'))
 
 
 class UpdateUserViewTest(TestCase):
@@ -118,7 +118,7 @@ class UpdateUserViewTest(TestCase):
     def setUp(self):
         number_of_users = 2
         for user_num in range(number_of_users):
-            User.objects.create_user(
+            CustomUser.objects.create_user(
                 first_name=f'First name {user_num}',
                 last_name=f'Last name {user_num}',
                 username=f'Username {user_num}',
@@ -163,7 +163,7 @@ class UpdateUserViewTest(TestCase):
         )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith(reverse(USERS_URL_NAME)))
-        self.assertEqual(User.objects.get(pk=1).username, 'test_update')
+        self.assertEqual(CustomUser.objects.get(pk=1).username, 'test_update')
 
 
 class DeleteUserViewTest(TestCase):
@@ -171,7 +171,7 @@ class DeleteUserViewTest(TestCase):
     def setUp(self):
         number_of_users = 2
         for user_num in range(number_of_users):
-            User.objects.create_user(
+            CustomUser.objects.create_user(
                 first_name=f'First name {user_num}',
                 last_name=f'Last name {user_num}',
                 username=f'Username {user_num}',
@@ -209,4 +209,4 @@ class DeleteUserViewTest(TestCase):
         )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith(reverse(USERS_URL_NAME)))
-        self.assertFalse(User.objects.filter(pk=1))
+        self.assertFalse(CustomUser.objects.filter(pk=1))

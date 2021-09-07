@@ -4,12 +4,12 @@ from django.views.generic import ListView
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.contrib import messages
-from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from .forms import UserForm
+from .models import CustomUser
 from task_manager.tasks.models import Task
 
 
@@ -31,7 +31,7 @@ class HomePage(TemplateView):
 
 class UserListPage(ListView):
     """Class for creating a user list page."""
-    model = User
+    model = CustomUser
     template_name = 'users.html'
     context_object_name = 'users'
 
@@ -42,7 +42,7 @@ class UserListPage(ListView):
 
 
 class CreateUser(SuccessMessageMixin, CreateView):
-    """User registration class."""
+    """CustomUser registration class."""
     form_class = UserForm
     template_name = FORM_HTML
     success_url = reverse_lazy(LOGIN_URL_NAME)
@@ -56,7 +56,7 @@ class CreateUser(SuccessMessageMixin, CreateView):
 
 
 class LoginUser(SuccessMessageMixin, LoginView):
-    """User login class."""
+    """CustomUser login class."""
     form_class = AuthenticationForm
     template_name = FORM_HTML
     success_message = 'Вы залогинены'
@@ -72,7 +72,7 @@ class LoginUser(SuccessMessageMixin, LoginView):
 
 
 class LogoutUser(SuccessMessageMixin, LogoutView):
-    """User Logout class."""
+    """CustomUser Logout class."""
     next_page = reverse_lazy(HOME_URL_NAME)
     success_message = 'Вы разлогинены'
 
@@ -85,8 +85,8 @@ class LogoutUser(SuccessMessageMixin, LogoutView):
 class UbdateUser(
     LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView
 ):
-    """User update class."""
-    model = User
+    """CustomUser update class."""
+    model = CustomUser
     form_class = UserForm
     template_name = FORM_HTML
     success_url = reverse_lazy(USERS_URL_NAME)
@@ -120,8 +120,8 @@ class UbdateUser(
 class DeleteUser(
     LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView
 ):
-    """User delete class."""
-    model = User
+    """CustomUser delete class."""
+    model = CustomUser
     template_name = 'delete.html'
     success_url = reverse_lazy(USERS_URL_NAME)
 
