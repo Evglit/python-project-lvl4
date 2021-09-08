@@ -15,11 +15,11 @@ class Task(models.Model):
         on_delete=models.PROTECT,
         verbose_name='Статус',
     )
-    executer = models.ForeignKey(
+    executor = models.ForeignKey(
         CustomUser,
         on_delete=models.PROTECT,
         verbose_name='Исполнитель',
-        related_name='executer',
+        related_name='executor',
         blank=True,
         null=True
     )

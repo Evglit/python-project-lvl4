@@ -139,7 +139,7 @@ class DeleteUser(
 
     def delete(self, request, *args, **kwargs):
         if Task.objects.filter(author=self.request.user.pk) \
-                or Task.objects.filter(executer=self.request.user.pk):
+                or Task.objects.filter(executor=self.request.user.pk):
             messages.error(
                 self.request,
                 'Невозможно удалить пользователя, потому что он используется'

@@ -27,7 +27,7 @@ class TaskModelTest(TestCase):
                 name=f'Task {task_num}',
                 description=f'Task description {task_num}',
                 status=Status.objects.get(pk=1),
-                executer=CustomUser.objects.get(pk=2),
+                executor=CustomUser.objects.get(pk=2),
                 author=CustomUser.objects.get(pk=1)
             )
 
@@ -39,7 +39,7 @@ class TaskModelTest(TestCase):
         self.assertEquals(field_label, 'Описание')
         field_label = task._meta.get_field('status').verbose_name
         self.assertEquals(field_label, 'Статус')
-        field_label = task._meta.get_field('executer').verbose_name
+        field_label = task._meta.get_field('executor').verbose_name
         self.assertEquals(field_label, 'Исполнитель')
         field_label = task._meta.get_field('author').verbose_name
         self.assertEquals(field_label, 'Автор')

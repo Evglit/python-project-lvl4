@@ -42,7 +42,7 @@ class TaskListViewTest(TestCase):
                 name=f'Task {task_num}',
                 description=f'Task description {task_num}',
                 status=Status.objects.get(pk=num1),
-                executer=CustomUser.objects.get(pk=num2),
+                executor=CustomUser.objects.get(pk=num2),
                 author=CustomUser.objects.get(pk=num1)
             )
             a.labels.add(Label.objects.get(pk=num1))
@@ -64,7 +64,7 @@ class TaskListViewTest(TestCase):
 
     def test_filter(self):
         self.client.login(username='Username 0', password='123')
-        response = self.client.get(reverse(TASKS_URL_NAME), {'executer': 1})
+        response = self.client.get(reverse(TASKS_URL_NAME), {'executor': 1})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['filter'].qs), 2)
         response = self.client.get(
@@ -107,7 +107,7 @@ class TaskDetailViewTest(TestCase):
                 name=f'Task {task_num}',
                 description=f'Task description {task_num}',
                 status=Status.objects.get(pk=1),
-                executer=CustomUser.objects.get(pk=2),
+                executor=CustomUser.objects.get(pk=2),
                 author=CustomUser.objects.get(pk=1)
             )
             a.labels.add(Label.objects.get(pk=1))
@@ -155,7 +155,7 @@ class CreateTaskViewTest(TestCase):
                 name=f'Task {task_num}',
                 description=f'Task description {task_num}',
                 status=Status.objects.get(pk=1),
-                executer=CustomUser.objects.get(pk=2),
+                executor=CustomUser.objects.get(pk=2),
                 author=CustomUser.objects.get(pk=1)
             )
             a.labels.add(Label.objects.get(pk=1))
@@ -182,7 +182,7 @@ class CreateTaskViewTest(TestCase):
                 'name': 'Task creation test',
                 'description': 'Task creation test',
                 'status': 1,
-                'executer': 2,
+                'executor': 2,
                 'labels': 1
             }
         )
@@ -222,7 +222,7 @@ class UpdateTaskViewTest(TestCase):
                 name=f'Task {task_num}',
                 description=f'Task description {task_num}',
                 status=Status.objects.get(pk=1),
-                executer=CustomUser.objects.get(pk=2),
+                executor=CustomUser.objects.get(pk=2),
                 author=CustomUser.objects.get(pk=1)
             )
             a.labels.add(Label.objects.get(pk=1))
@@ -253,7 +253,7 @@ class UpdateTaskViewTest(TestCase):
                 'name': 'Task update test',
                 'description': 'Task update test',
                 'status': 1,
-                'executer': 2,
+                'executor': 2,
                 'labels': 1
             }
         )
@@ -288,7 +288,7 @@ class DeleteTaskViewTest(TestCase):
                 name=f'Task {task_num}',
                 description=f'Task description {task_num}',
                 status=Status.objects.get(pk=1),
-                executer=CustomUser.objects.get(pk=2),
+                executor=CustomUser.objects.get(pk=2),
                 author=CustomUser.objects.get(pk=1)
             )
             a.labels.add(Label.objects.get(pk=1))
