@@ -19,7 +19,9 @@ class Task(models.Model):
         CustomUser,
         on_delete=models.PROTECT,
         verbose_name='Исполнитель',
-        related_name='executer'
+        related_name='executer',
+        blank=True,
+        null=True
     )
     author = models.ForeignKey(
         CustomUser,
