@@ -18,5 +18,5 @@ class TaskFilter(django_filters.FilterSet):
 
     def my_tasks(self, queryset, name, value):
         if value:
-            return queryset.filter(executer=self.request.user.pk)
+            return queryset.filter(author=self.request.user.pk)
         return queryset
