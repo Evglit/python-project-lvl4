@@ -72,7 +72,7 @@ class TaskListViewTest(TestCase):
             {'self_tasks': 'on'}
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.context['filter'].qs), 2)
+        self.assertEqual(len(response.context['filter'].qs), 3)
         response = self.client.get(reverse(TASKS_URL_NAME), {'status': 1})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['filter'].qs), 3)
