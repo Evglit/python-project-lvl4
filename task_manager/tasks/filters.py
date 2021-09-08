@@ -10,7 +10,10 @@ class TaskFilter(django_filters.FilterSet):
         method='my_tasks',
         widget=CheckboxInput
     )
-    labels = django_filters.ModelChoiceFilter(queryset=Label.objects.all(), label='Метка')
+    labels = django_filters.ModelChoiceFilter(
+        queryset=Label.objects.all(),
+        label='Метка'
+    )
 
     class Meta:
         model = Task
