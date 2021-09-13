@@ -14,3 +14,15 @@ Password for all users: `123`<br>
 Login example:<br>
 Username: `Тирион`<br>
 Password: `123`
+
+## Installation
+Clone the repository and use this command to install application dependencies:<br>
+``` bash
+pip install -r requirements.txt
+```
+
+The following environment variables are used to configure the application:<br>
+`POST_SERVER_ITEM_ACCESS_TOKEN`
+`SECRET_KEY_APP`
+`DEBUG_STATUS`
+`ALLOWED_HOSTS`

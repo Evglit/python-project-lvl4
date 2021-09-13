@@ -17,6 +17,9 @@ from dotenv import load_dotenv
 import rollbar
 
 
+load_dotenv()
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,14 +28,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+
 SECRET_KEY = (
-    'django-insecure-#&t!j5^0)22r5f3^o8_il2%c0e)9#u6i!3msd&^5l9@cvbj4al'
+    os.getenv('SECRET_KEY_APP')
 )
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = ['task-manager07.herokuapp.com']
+# SECURITY WARNING: don't run with debug turned on in production!
+
+DEBUG = os.getenv('DEBUG_STATUS')
+
+ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS')]
 
 
 # Application definition
@@ -96,6 +102,7 @@ DATABASES = {
 
 django_heroku.settings(locals(), databases=False)
 
+
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -126,22 +133,20 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-load_dotenv()
-
-POST_SERVER_ITEM_ACCESS_TOKEN = os.getenv('POST_SERVER_ITEM_ACCESS_TOKEN')
-
 ROLLBAR = {
-    'access_token': POST_SERVER_ITEM_ACCESS_TOKEN,
+    'access_token': os.getenv('POST_SERVER_ITEM_ACCESS_TOKEN'),
     'environment': 'development' if DEBUG else 'production',
     'root': BASE_DIR,
 }
 
 rollbar.init(**ROLLBAR)
+
 
 AUTH_USER_MODEL = 'users.CustomUser'

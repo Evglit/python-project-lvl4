@@ -1,8 +1,8 @@
 {
-  "name": "Start on Heroku: Python",
-  "description": "A barebones Python app, which can easily be deployed to Heroku.",
+  "name": "Task_manager",
+  "description": "Set tasks, assign performers and change their statuses.",
   "image": "heroku/python",
-  "repository": "https://github.com/heroku/python-getting-started",
+  "repository": "https://github.com/Evglit/python-project-lvl4",
   "keywords": ["python", "django" ],
   "addons": [ "heroku-postgresql" ],
   "env": {
