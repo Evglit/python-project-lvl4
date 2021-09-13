@@ -15,7 +15,7 @@ import django_heroku
 from pathlib import Path
 from dotenv import load_dotenv
 import rollbar
-
+import dj_database_url
 
 load_dotenv()
 
@@ -100,7 +100,8 @@ DATABASES = {
     }
 }
 
-django_heroku.settings(locals(), databases=False)
+db_from_env = dj_database_url.config(conn_max_age=0, ssl_require=False)
+django_heroku.settings(locals() ,databases=False)
 
 
 # Password validation
