@@ -3,6 +3,7 @@
 {% load bootstrap4 %}
 
 {% block content %}
+  <h1 class="my-4">{% translate "Cтатусы" %}</h1>
   <a class="nav-link" href="{% url 'create_status' %}"> {% translate "Создать статус" %}</a>
   <table class="table table-striped">
       <thead>

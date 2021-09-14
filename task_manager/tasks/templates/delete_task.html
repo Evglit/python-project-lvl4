@@ -1,0 +1,12 @@
+{% extends './base.html' %}
+{% load i18n %}
+{% load bootstrap4 %}
+
+{% block content %}
+    <h1 class="my-4">{% translate "Удаление задачи" %}</h1>
+    <p>{% blocktranslate %}Вы уверены, что хотите удалить {{ object }}?{% endblocktranslate %}</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">{% translate "Да, удалить" %}</button>
+    </form>
+{% endblock %}

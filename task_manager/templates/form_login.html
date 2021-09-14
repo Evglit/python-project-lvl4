@@ -3,9 +3,12 @@
 {% load bootstrap4 %}
 
 {% block content %}
+    <h1 class="my-4">{% translate "Вход" %}</h1>
     <form method="post">
         {% csrf_token %}
         {% bootstrap_form form %}
-        {% buttons submit=command %}{% endbuttons %}
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">{% translate "Войти" %}</button>
+        </div>
     </form>
 {% endblock %}
