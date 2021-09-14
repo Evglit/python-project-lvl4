@@ -83,9 +83,7 @@ class DeleteUser(
             messages.error(
                 self.request,
                 gettext(
-                    'Невозможно удалить пользователя, '
-                    +
-                    'потому что он используется'
+                    'Невозможно удалить пользователя, потому что он используется' # noqa E501
                 )
             )
             return redirect(reverse_lazy(USERS_URL_NAME))
