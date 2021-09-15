@@ -25,6 +25,7 @@ jobs:
       - name: Run linter and pytest
         env:
             SECRET_KEY_APP: ${{ secrets.SECRET_KEY_APP }}
+            LANGUAGE: ${{ secrets.LANGUAGE }}
         run: |
           make check
       - name: Test & publish code coverage
