@@ -100,6 +100,7 @@ DATABASES = {
     }
 }
 
+db_from_env = dj_database_url.config(conn_max_age=0, ssl_require=False)
 django_heroku.settings(locals())
 
 
@@ -116,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = os.getenv('LANGUAGE')
 
 TIME_ZONE = 'UTC'
 
