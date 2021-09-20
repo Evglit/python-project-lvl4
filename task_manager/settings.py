@@ -105,7 +105,6 @@ db_from_env = dj_database_url.config(conn_max_age=0, ssl_require=False)
 if db_from_env:
     DATABASES['default'] = db_from_env
 django_heroku.settings(locals(), databases=False)
-print(DATABASES)
 
 
 # Password validation
@@ -121,7 +120,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = os.getenv('LANGUAGE', 'ru')
+LOCALE_PATHS = [
+    './task_manager/locale',
+]
+
+LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'UTC'
 
@@ -130,6 +133,7 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
 
 
 # Static files (CSS, JavaScript, Images)

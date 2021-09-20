@@ -8,15 +8,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-15 00:12+0300\n"
+"POT-Creation-Date: 2021-09-20 23:22+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: en\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: labels/models.py:6 labels/templates/labels.html:12 statuses/models.py:6
+#: statuses/templates/statuses.html:12 tasks/models.py:9
+#: tasks/templates/tasks.html:29
+msgid "Имя"
+msgstr "Name"
 
 #: labels/templates/delete_label.html:6
 msgid "Удаление метки"
@@ -36,17 +42,17 @@ msgstr "Yes, delete"
 
 #: labels/templates/form_create_label.html:6 labels/templates/labels.html:7
 msgid "Создать метку"
-msgstr "Create a label"
+msgstr "Create label"
 
 #: labels/templates/form_create_label.html:11
 #: statuses/templates/form_create_status.html:11
 #: tasks/templates/form_create_task.html:11
 msgid "Создать"
-msgstr "Create a label"
+msgstr "Create label"
 
 #: labels/templates/form_update_label.html:6
 msgid "Изменение метки"
-msgstr "Change label"
+msgstr "Changing a label"
 
 #: labels/templates/form_update_label.html:11 labels/templates/labels.html:25
 #: statuses/templates/form_update_status.html:11
@@ -56,14 +62,9 @@ msgstr "Change label"
 msgid "Изменить"
 msgstr "Change"
 
-#: labels/templates/labels.html:6 templates/base.html:24
+#: labels/templates/labels.html:6 tasks/models.py:35 templates/base.html:24
 msgid "Метки"
 msgstr "Tags"
-
-#: labels/templates/labels.html:12 statuses/templates/statuses.html:12
-#: tasks/templates/tasks.html:29
-msgid "Имя"
-msgstr "Name"
 
 #: labels/templates/labels.html:13 statuses/templates/statuses.html:13
 #: tasks/templates/task_detail.html:28 tasks/templates/tasks.html:33
@@ -82,7 +83,7 @@ msgstr "Delete"
 #: statuses/views.py:67 tasks/views.py:25 tasks/views.py:38 tasks/views.py:52
 #: tasks/views.py:71 tasks/views.py:87 users/views.py:45 users/views.py:73
 msgid "Вы не авторизованы! Пожалуйста, выполните вход."
-msgstr "You are not authorized! Please sign in."
+msgstr "You are not authorized! Please login."
 
 #: labels/views.py:37
 msgid "Метка успешно создана"
@@ -129,6 +130,33 @@ msgstr "Status changed successfully"
 msgid "Статус успешно удалён"
 msgstr "Status deleted successfully"
 
+#: tasks/filters.py:10
+msgid "Только свои задачи"
+msgstr "Only your tasks"
+
+#: tasks/filters.py:16
+msgid "Метка"
+msgstr "Tag"
+
+#: tasks/models.py:11
+msgid "Описание"
+msgstr "Description"
+
+#: tasks/models.py:17 tasks/templates/task_detail.html:24
+#: tasks/templates/tasks.html:30
+msgid "Статус"
+msgstr "Status"
+
+#: tasks/models.py:22 tasks/templates/task_detail.html:20
+#: tasks/templates/tasks.html:32
+msgid "Исполнитель"
+msgstr "Executor"
+
+#: tasks/models.py:30 tasks/templates/task_detail.html:16
+#: tasks/templates/tasks.html:31
+msgid "Автор"
+msgstr "Author"
+
 #: tasks/templates/delete_task.html:6
 msgid "Удаление задачи"
 msgstr "Deleting a task"
@@ -139,23 +167,11 @@ msgstr "Create task"
 
 #: tasks/templates/form_update_task.html:6
 msgid "Изменение задачи"
-msgstr "Changing a task"
+msgstr "Change task"
 
 #: tasks/templates/task_detail.html:6
 msgid "Просмотр задачи"
 msgstr "View a task"
-
-#: tasks/templates/task_detail.html:16 tasks/templates/tasks.html:31
-msgid "Автор"
-msgstr "Author"
-
-#: tasks/templates/task_detail.html:20 tasks/templates/tasks.html:32
-msgid "Исполнитель"
-msgstr "Executor"
-
-#: tasks/templates/task_detail.html:24 tasks/templates/tasks.html:30
-msgid "Статус"
-msgstr "Status"
 
 #: tasks/templates/task_detail.html:33
 msgid "Метки:"
@@ -164,6 +180,10 @@ msgstr "Tags:"
 #: tasks/templates/tasks.html:6 templates/base.html:27
 msgid "Задачи"
 msgstr "Tasks"
+
+#: tasks/templates/tasks.html:18
+msgid "Показать"
+msgstr "Show"
 
 #: tasks/views.py:51
 msgid "Задача успешно создана"
@@ -197,9 +217,13 @@ msgstr "Users"
 msgid "Статусы"
 msgstr "Statuses"
 
+#: templates/base.html:35
+msgid "Выход"
+msgstr "Logout"
+
 #: templates/base.html:39 templates/form_login.html:6
 msgid "Вход"
-msgstr "Entrance"
+msgstr "Login"
 
 #: templates/base.html:42 users/templates/form_create_user.html:6
 msgid "Регистрация"
@@ -215,9 +239,9 @@ msgid ""
 "исполнителей и менять их статусы. Для работы с системой требуется "
 "регистрация и аутентификация."
 msgstr ""
-"A task management system that allows you to set tasks, assign performers "
-"and change their statuses. Registration and authentication "
-"are required to work with the system."
+"A task management system that allows you to set tasks, assign performers and "
+"change their statuses. Registration and authentication are required to work "
+"with the system."
 
 #: templates/home.html:11
 msgid "Исходный код"

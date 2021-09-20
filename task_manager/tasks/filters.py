@@ -2,17 +2,18 @@ from task_manager.labels.models import Label
 from .models import Task
 import django_filters
 from django.forms.widgets import CheckboxInput
+from django.utils.translation import gettext
 
 
 class TaskFilter(django_filters.FilterSet):
     self_tasks = django_filters.BooleanFilter(
-        label='Только свои задачи',
+        label=gettext('Только свои задачи'),
         method='my_tasks',
         widget=CheckboxInput
     )
     labels = django_filters.ModelChoiceFilter(
         queryset=Label.objects.all(),
-        label='Метка'
+        label=gettext('Метка')
     )
 
     class Meta:

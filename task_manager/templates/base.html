@@ -32,7 +32,7 @@
             {% if request.user.is_authenticated %}
             <form action="{% url 'logout' %}" method="post">
               {% csrf_token %}
-              <input class="btn nav-link" type="submit" value="Выход">
+              <button type="submit" class="btn nav-link">{% translate "Выход" %}</button>
             </form>
             {% else %}
             <li class="nav-item">
