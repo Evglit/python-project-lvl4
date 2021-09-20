@@ -26,3 +26,4 @@ The following environment variables are used to configure the application:<br>
 `SECRET_KEY_APP`
 `DEBUG_STATUS`
 `ALLOWED_HOSTS`
+`LANGUAGE`

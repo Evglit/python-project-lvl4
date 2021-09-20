@@ -124,7 +124,7 @@ LOCALE_PATHS = [
     './task_manager/locale',
 ]
 
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = os.getenv('LANGUAGE', 'ru')
 
 TIME_ZONE = 'UTC'
 
